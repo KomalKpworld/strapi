@@ -1,0 +1,826 @@
+{
+  "info": {
+    "_postman_id": "aaf785c3-a0ea-43bd-a3da-15ec56d90b4b",
+    "name": "New Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "24980375",
+    "_collection_link": "https://blue-star-637120.postman.co/workspace/New-Team-Workspace~a469b7ec-ba83-4a3f-91cc-0009911a5e26/collection/24980375-aaf785c3-a0ea-43bd-a3da-15ec56d90b4b?action=share&creator=24980375&source=collection_link"
+  },
+  "item": [
+    {
+      "name": "CAtegory",
+      "item": [
+        {
+          "name": "get category",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:1337/api/category",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "category"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "create Category",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "category_name",
+                  "value": "pc",
+                  "type": "text"
+                },
+                {
+                  "key": "move",
+                  "value": "0",
+                  "type": "text"
+                },
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "/C:/Users/Meghs/Downloads/userEmail.png"
+                },
+                {
+                  "key": "category_image",
+                  "value": "komla.com",
+                  "type": "text",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "localhost:1337/api/category",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "category"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "updateCategoiry",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "category_name",
+                  "value": "realation",
+                  "type": "text"
+                },
+                {
+                  "key": "move",
+                  "value": "2",
+                  "type": "text"
+                },
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "/C:/Users/Meghs/Downloads/userEmail.png"
+                }
+              ]
+            },
+            "url": {
+              "raw": "localhost:1337/api/category/:id",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "category", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "8"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get SubCategory Name by category id",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost: 1337/api/subcategory/:categoryId",
+              "host": ["localhost"],
+              "port": " 1337",
+              "path": ["api", "subcategory", ":categoryId"],
+              "variable": [
+                {
+                  "key": "categoryId",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "find  category with name",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:1337/api/category-with-name",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "category-with-name"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "find category by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:1337/api/category/:id",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "category", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "17"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "deleteCategory",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "localhost:1337/api/category/:id",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "category", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "8"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "with pagination",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "searchapi",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:1337/api/categorys?filters[category_name][$eq]=Daily Image",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "categorys"],
+              "query": [
+                {
+                  "key": "filters[category_name][$eq]",
+                  "value": "Daily Image"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Ptoduct",
+      "item": [
+        {
+          "name": "populate datta",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:1337/api/product",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "product"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get produicts",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:1337/api/product",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "product"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "create product",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "category_id",
+                  "value": "2",
+                  "type": "text"
+                },
+                {
+                  "key": "sub_category_id",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "frame_type",
+                  "value": "Free",
+                  "type": "text"
+                },
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "/C:/Users/Meghs/Downloads/pexels-aleksandar-pasaric-2341830.jpg"
+                }
+              ]
+            },
+            "url": {
+              "raw": "localhost:1337/api/product",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "product"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get Product by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:1337/api/product/:id",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "product", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "145"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update product",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "category_id",
+                  "value": "334",
+                  "type": "text"
+                },
+                {
+                  "key": "sub_category_id",
+                  "value": "54",
+                  "type": "text"
+                },
+                {
+                  "key": "frame_type",
+                  "value": "Free",
+                  "type": "text"
+                },
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "localhost:1337/api/product/:id",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "product", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1378"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "deleteProduct",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "limit",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:1337/api/products?pagination[start]=0&pagination[limit]=10",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "products"],
+              "query": [
+                {
+                  "key": "pagination[start]",
+                  "value": "0"
+                },
+                {
+                  "key": "pagination[limit]",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "search",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:1337/api/products?filters[frame_type][$eq]=Paid",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "products"],
+              "query": [
+                {
+                  "key": "filters[frame_type][$eq]",
+                  "value": "Paid"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "pagination",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:1337/api/products?pagination[page]=1&pagination[pageSize]=3",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "products"],
+              "query": [
+                {
+                  "key": "pagination[page]",
+                  "value": "1"
+                },
+                {
+                  "key": "pagination[pageSize]",
+                  "value": "3"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "upload file",
+      "item": [
+        {
+          "name": "fileupload Api",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "data",
+                  "value": "{\"image_upload\":\"komla\"}",
+                  "type": "text"
+                },
+                {
+                  "key": "files.image_uploads",
+                  "type": "file",
+                  "src": "/C:/Users/Meghs/Pictures/Screenshots/Screenshot (42).png"
+                }
+              ]
+            },
+            "url": {
+              "raw": "localhost:1337/api/file-uploads",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "file-uploads"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "upload file upload",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image_upload",
+                  "value": "komau",
+                  "type": "text"
+                },
+                {
+                  "key": "image_uploads",
+                  "type": "file",
+                  "src": "/C:/Users/Meghs/Desktop/project/coreModule/backend/category_image/category_image_202010111146.png"
+                }
+              ]
+            },
+            "url": {
+              "raw": "localhost:1337/api/custom/upload",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "custom", "upload"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "file upload",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "ref",
+                  "value": "api::category.category",
+                  "type": "text"
+                },
+                {
+                  "key": "refId",
+                  "value": "41",
+                  "type": "text"
+                },
+                {
+                  "key": "field",
+                  "value": "category_images",
+                  "type": "text"
+                },
+                {
+                  "key": "files",
+                  "type": "file",
+                  "src": "/C:/Users/Meghs/Desktop/project/coreModule/image-downloader/backend/favicon.png"
+                }
+              ]
+            },
+            "url": {
+              "raw": "localhost:1337/api/upload/",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "upload", ""]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "subcategory",
+      "item": [
+        {
+          "name": "get subCategory with category id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:1337/api/subcategory/:categoryId",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "subcategory", ":categoryId"],
+              "variable": [
+                {
+                  "key": "categoryId",
+                  "value": "18"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "create subcategory",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "category_id",
+                  "value": "18",
+                  "type": "text"
+                },
+                {
+                  "key": "category_name",
+                  "value": "",
+                  "type": "text"
+                },
+                {
+                  "key": "sub_category_name",
+                  "value": "",
+                  "type": "text"
+                },
+                {
+                  "key": "display_date",
+                  "value": "",
+                  "type": "text"
+                },
+                {
+                  "key": "status",
+                  "value": "",
+                  "type": "text"
+                },
+                {
+                  "key": "move",
+                  "value": "",
+                  "type": "text"
+                },
+                {
+                  "key": "url",
+                  "value": "",
+                  "type": "text"
+                },
+                {
+                  "key": "is_new",
+                  "value": "",
+                  "type": "text"
+                },
+                {
+                  "key": "slider",
+                  "value": "",
+                  "type": "text"
+                },
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "/C:/Users/Meghs/Pictures/Screenshots/Screenshot (40).png"
+                }
+              ]
+            },
+            "url": {
+              "raw": "localhost:1337/api/sub-category",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "sub-category"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getCategoryAll",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:1337/api/sub-category",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "sub-category"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "findSubCategoryById",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "deleteSubCategory",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "localhost:1337/api/sub-category/:id",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "sub-category", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "72"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "serByNormalField",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:1337/api/sub-categorys?filters[sub_category_name][$eq]=Mahatma Gandhi",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "sub-categorys"],
+              "query": [
+                {
+                  "key": "filters[sub_category_name][$eq]",
+                  "value": "Mahatma Gandhi"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "pagination",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:1337/api/sub-categorys?pagination[page]=1&pagination[pageSize]=3",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "sub-categorys"],
+              "query": [
+                {
+                  "key": "pagination[page]",
+                  "value": "1"
+                },
+                {
+                  "key": "pagination[pageSize]",
+                  "value": "3"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "limit",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "New Request",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "usersFolder",
+      "item": [
+        {
+          "name": "addUser",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "username",
+                  "value": "Komal",
+                  "type": "text"
+                },
+                {
+                  "key": "email",
+                  "value": "komalbansod@gmail.com",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "Komal@123",
+                  "type": "text"
+                },
+                {
+                  "key": "role",
+                  "value": "1",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "localhost:1337/api/users",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "users"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "login user",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "identifier",
+                  "value": "komalkpe@gmail.com",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "Komal@123",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "localhost:1337/api/auth/local",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "auth", "local"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

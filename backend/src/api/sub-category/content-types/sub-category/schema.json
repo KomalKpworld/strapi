@@ -1,0 +1,68 @@
+{
+  "kind": "collectionType",
+  "collectionName": "sub_categories",
+  "info": {
+    "singularName": "sub-category",
+    "pluralName": "sub-categories",
+    "displayName": "SubCategory",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true,
+    "populateCreatorFields": true,
+    "timestamps": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "sub_category_name": {
+      "type": "string"
+    },
+    "category_id": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::category.category",
+      "inversedBy": "sub_categories"
+    },
+    "sub_category_image": {
+      "type": "string",
+      "required": false
+    },
+    "display_date": {
+      "type": "string",
+      "required": false
+    },
+    "status": {
+      "type": "string"
+    },
+    "move": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "is_new": {
+      "type": "boolean"
+    },
+    "slider": {
+      "type": "string",
+      "required": false
+    },
+    "products": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::product.product",
+      "mappedBy": "sub_category_id"
+    },
+    "file": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    }
+  }
+}
