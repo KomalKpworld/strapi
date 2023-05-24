@@ -1,0 +1,48 @@
+{
+  "kind": "collectionType",
+  "collectionName": "manage_app_ids",
+  "info": {
+    "singularName": "manage-app-id",
+    "pluralName": "manage-app-ids",
+    "displayName": "ManageAppId",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true,
+    "populateCreatorFields": true,
+    "privateAttributes": [
+      "createdAt",
+      "updatedAt",
+      "publishedAt",
+      "createdBy",
+      "updatedBy"
+    ]
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "PackageName": {
+      "type": "string"
+    },
+    "Status": {
+      "type": "boolean",
+      "default": false
+    },
+    "Link": {
+      "type": "text"
+    },
+    "Logo": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "AppName": {
+      "type": "string"
+    },
+    "Count": {
+      "type": "integer"
+    }
+  }
+}

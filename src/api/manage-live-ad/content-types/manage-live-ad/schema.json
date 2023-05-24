@@ -1,0 +1,30 @@
+{
+  "kind": "collectionType",
+  "collectionName": "manage_live_ads",
+  "info": {
+    "singularName": "manage-live-ad",
+    "pluralName": "manage-live-ads",
+    "displayName": "ManageLiveAd",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true,
+    "populateCreatorFields": true,
+    "privateAttributes": ["createdAt", "updatedAt","publishedAt", "createdBy", "updatedBy"]
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "isActiveAd": {
+      "type": "boolean",
+      "default": true
+    },
+    "baseUrl": {
+      "type": "string"
+    },
+    "AppId": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::manage-app.manage-app"
+    }
+  }
+}

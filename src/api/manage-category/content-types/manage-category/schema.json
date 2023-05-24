@@ -1,0 +1,48 @@
+{
+  "kind": "collectionType",
+  "collectionName": "manage_categories",
+  "info": {
+    "singularName": "manage-category",
+    "pluralName": "manage-categories",
+    "displayName": "ManageCategory",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true,
+    "populateCreatorFields": true,
+    "privateAttributes": ["createdAt", "updatedAt","publishedAt", "createdBy", "updatedBy"]
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "CatName": {
+      "type": "string",
+      "default": "new"
+    },
+    "ActionId": {
+      "type": "integer"
+    },
+    "Logo": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "Status": {
+      "type": "boolean",
+      "default": true
+    },
+    "TotalVideo": {
+      "type": "integer"
+    },
+    "AppId": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::manage-app.manage-app"
+    },
+    "OrderId": {
+      "type": "integer"
+    }
+  }
+}

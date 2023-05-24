@@ -1,0 +1,47 @@
+{
+  "kind": "collectionType",
+  "collectionName": "manage_custom_adds",
+  "info": {
+    "singularName": "manage-custom-add",
+    "pluralName": "manage-custom-adds",
+    "displayName": "ManageCustomAdd",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true,
+    "populateCreatorFields": true,
+    "privateAttributes": ["createdAt", "updatedAt","publishedAt", "createdBy", "updatedBy"]
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Adtitle": {
+      "type": "string"
+    },
+    "AdsDescription": {
+      "type": "string"
+    },
+    "AdsUrl": {
+      "type": "string"
+    },
+    "AdsIcon": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "isActive": {
+      "type": "boolean",
+      "default": true
+    },
+    "AdsType": {
+      "type": "enumeration",
+      "enum": [
+        "Download",
+        "Online"
+      ],
+      "default": "Download"
+    }
+  }
+}

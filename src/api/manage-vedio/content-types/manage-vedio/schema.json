@@ -1,0 +1,91 @@
+{
+  "kind": "collectionType",
+  "collectionName": "manage_vedios",
+  "info": {
+    "singularName": "manage-vedio",
+    "pluralName": "manage-vedios",
+    "displayName": "ManageVedio",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true,
+    "populateCreatorFields": true,
+    "privateAttributes": [
+      "createdAt",
+      "updatedAt",
+      "publishedAt",
+      "createdBy",
+      "updatedBy"
+    ]
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "CId": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::manage-category.manage-category"
+    },
+    "VideoName": {
+      "type": "string"
+    },
+    "Zip": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "files"
+      ]
+    },
+    "VideoThumbnail": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "videos"
+      ]
+    },
+    "PreviewVideo": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "videos"
+      ]
+    },
+    "NotificationImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "NotificationDescription": {
+      "type": "string",
+      "default": "Active i am"
+    },
+    "TotalImage": {
+      "type": "integer"
+    },
+    "Status": {
+      "type": "boolean",
+      "default": true
+    },
+    "AddedBy": {
+      "type": "string"
+    },
+    "VideoResolution": {
+      "type": "integer"
+    },
+    "AppId": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::manage-app.manage-app"
+    },
+    "Date": {
+      "type": "date",
+      "required": true,
+      "default": "2023-01-11"
+    }
+  }
+}

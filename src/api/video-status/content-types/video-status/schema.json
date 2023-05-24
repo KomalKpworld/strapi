@@ -1,0 +1,31 @@
+{
+  "kind": "collectionType",
+  "collectionName": "video_statuses",
+  "info": {
+    "singularName": "video-status",
+    "pluralName": "video-statuses",
+    "displayName": "VideoStatus",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true,
+    "populateCreatorFields": true,
+    "privateAttributes": [
+      "createdAt",
+      "updatedAt",
+      "publishedAt",
+      "createdBy",
+      "updatedBy"
+    ]
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "VedioCount": {
+      "type": "integer",
+      "default": 0
+    },
+    "UserName": {
+      "type": "string"
+    }
+  }
+}
