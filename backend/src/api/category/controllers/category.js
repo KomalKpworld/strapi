@@ -17,7 +17,6 @@ module.exports = createCoreController('api::category.category', ({ strapi }) => 
                 data: {
                     category_name: data.category_name,
                     move: data.move,
-                    addedBy: user,
                     created_by_id: user
                 },
                 files: {
