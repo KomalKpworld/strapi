@@ -30,6 +30,8 @@ const Category = () => {
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
   const token = localStorage.getItem("token");
   const [searchQuery, setSearchQuery] = useState("");
+   // eslint-disable-next-line
+  const [selectedRows, setSelectedRows] = useState([]);
 
   const initialColumns = [
     { field: "id", headerName: "ID", width: 100 },
@@ -153,6 +155,9 @@ const Category = () => {
   };
 
   const handleModalCancel = () => {
+    setCreateFormData({});
+    setEditFormData({});
+    setDeleteFormData({});
     setIsEditModalOpen(false);
     setIsCreateModalOpen(false);
     setIsDeleteModalOpen(false);
@@ -279,6 +284,13 @@ const Category = () => {
         console.log("Error response:", err.response);
       }
     }
+  };
+
+  const handleCellClick = (params) => {
+    const selectedRow = params.row;
+    console.log("Selected Row:", selectedRow);
+    setSelectedRows(selectedRow);
+    // Perform any additional actions with the selected row
   };
 
   return (
@@ -536,6 +548,7 @@ const Category = () => {
           }}
           pageSizeOptions={[5, 10, 20, 30, 50, 100]}
           checkboxSelection
+          onCellClick={handleCellClick}
           style={{ boxShadow: "2px 2px 8px rgba(0, 0, 0, 0.1)" }}
         />
 
