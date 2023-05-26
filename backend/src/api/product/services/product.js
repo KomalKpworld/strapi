@@ -25,12 +25,19 @@ module.exports = {
     },
     async updateImageUrl(id) {
         try {
-            const dirPath = path.join('localhost:1337', path);
-            let updateEtntry = await strapi.entityService.update('api::product.product', id, {
-                data: {
-                    image: dirPath,
-                }
-            })
+            console.log(":ajo")
+            const findUploadData = await strapi.entityService.findOne('api::product.product', id, {
+                populate: { file: true },
+            });
+            let updateEtntry
+            if (findUploadData.file[0]) {
+                const dirPath = path.join('localhost:1337', findUploadData.file[0].url);
+                updateEtntry = await strapi.entityService.update('api::product.product', id, {
+                    data: {
+                        image: dirPath,
+                    }
+                });
+            }
             return { updateEtntry }
         }
         catch (err) {

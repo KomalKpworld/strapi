@@ -10,7 +10,7 @@ module.exports = createCoreController('api::product.product', ({ strapi }) => ({
             const user = ctx.state.user.id;
             let category_id = Number(data.category_id)
             let sub_category_id = Number(data.sub_category_id)
-            if (data.frame_type) return "frame_typr is required"
+            if (!data.frame_type) return "frame_typr is required"
             const entry = await strapi.entityService.create('api::product.product', {
                 data: {
                     category_id: category_id,
@@ -22,15 +22,13 @@ module.exports = createCoreController('api::product.product', ({ strapi }) => ({
                     file: ctx.request.files['file']
                 }
             });
-            let id = entry.id
-            let findUploadData = await strapi.entityService.findOne('api::product.product', id, {
-                populate: { file: true },
-            });
-            if (findUploadData.file[0]) {
-                let update = await updateImageUrl(id, findUploadData.file[0])
+            let id = entry.id         
+                let update = await updateImageUrl(id)
+                if(update.err){
+                    return update.err
+                }
                 return update.updateEtntry
-            }
-            return entry
+
         } catch (error) {
             return error
         }
@@ -55,12 +53,12 @@ module.exports = createCoreController('api::product.product', ({ strapi }) => ({
                     file: ctx.request.files['file']
                 },
             });
-            let findUploadData = await strapi.entityService.findOne('api::product.product', id, { populate: { file: true } });
-            if (findUploadData.file[0]) {
-                let update = await updateImageUrl(id, findUploadData.file[0])
+            let update = await updateImageUrl(id)
+                if(update.err){
+                    return update.err
+                }
                 return update.updateEtntry
-            }
-            return entry
+
         } catch (error) {
             return error
         }
