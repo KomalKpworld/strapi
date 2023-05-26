@@ -17,7 +17,7 @@ module.exports = createCoreController('api::category.category', ({ strapi }) => 
                 data: {
                     category_name: data.category_name,
                     move: data.move,
-                    created_by_id: user
+                    created_by_user: user
                 },
                 files: {
                     file: ctx.request.files['file']
@@ -43,7 +43,7 @@ module.exports = createCoreController('api::category.category', ({ strapi }) => 
                 data: {
                     category_name: data.category_name,
                     move: data.move,
-                    updated_by_id:user 
+                    updated_by_user:user 
                 },
                 files: {
                     file: ctx.request.files['file']
@@ -58,7 +58,7 @@ module.exports = createCoreController('api::category.category', ({ strapi }) => 
     async find(ctx) {
         try {
             ctx.query = { ...ctx.query, local: 'en' }
-            const findData = await strapi.entityService.findMany('api::category.category', {  populate: { file: true, createdBy:true,updatedBy:true  }});
+            const findData = await strapi.entityService.findMany('api::category.category', {  populate: { file: true, created_by_user:true, updated_by_user:true  }});
             return findData
         } catch (error) {
             return   "something went wrong"
@@ -69,7 +69,7 @@ module.exports = createCoreController('api::category.category', ({ strapi }) => 
         try {
             const id = ctx.request.params.id
             const entity = await strapi.entityService.findOne('api::category.category', id, {
-                populate: { file: true, createdBy:true, updatedBy:true },
+                populate: { file: true, created_by_user:true, updated_by_user:true },
             });
         
             return  entity 
