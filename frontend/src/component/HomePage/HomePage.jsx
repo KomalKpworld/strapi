@@ -1,8 +1,6 @@
 import React from "react";
 import { Button } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
-import HomeApp from "../HomeApp";
-import { BrowserRouter } from "react-router-dom";
 
 const HomePage = () => {
   const navigate = useNavigate();

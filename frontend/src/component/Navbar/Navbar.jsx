@@ -1,19 +1,11 @@
 import React from "react";
 import { AppBar, Toolbar, Drawer } from "@mui/material";
-import { Button } from "@mantine/core";
 
 import useStyles from "./styles";
 import Sidebar from "../Sidebar/Sidebar";
 
 const Navbar = ({ onLogout }) => {
   const classes = useStyles();
-
-  const handleLogout = () => {
-    // Call the onLogout function passed from the parent component
-    if (typeof onLogout === "function") {
-      onLogout();
-    }
-  };
 
   return (
     <>
