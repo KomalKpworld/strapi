@@ -209,7 +209,10 @@ const Category = () => {
       console.log("Form values:", values);
 
       if (currentUser && currentUser.id) {
-        if (values.addedBy && values.addedBy.id === currentUser.id) {
+        if (
+          values.created_by_user &&
+          values.created_by_user.id === currentUser.id
+        ) {
           const success = await deleteCategoryData(values.id, token);
 
           if (success) {
@@ -242,8 +245,8 @@ const Category = () => {
       if (
         currentUser &&
         currentUser.id &&
-        values.addedBy &&
-        values.addedBy.id === currentUser.id
+        values.created_by_user &&
+        values.created_by_user.id === currentUser.id
       ) {
         if (isEditModalOpen) {
           const formData = new FormData();
@@ -301,8 +304,11 @@ const Category = () => {
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item label="addedBy" name="addedBy" hidden>
-                <Input value={deleteFormData?.addedBy?.id || ""} disabled />
+              <Form.Item label="created_by_user" name="created_by_user" hidden>
+                <Input
+                  value={deleteFormData?.created_by_user?.id || ""}
+                  disabled
+                />
               </Form.Item>
             </Col>
           </Row>
@@ -340,8 +346,11 @@ const Category = () => {
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item label="addedBy" name="addedBy" hidden>
-                <Input value={editFormData?.addedBy?.id || ""} disabled />
+              <Form.Item label="created_by_user" name="created_by_user" hidden>
+                <Input
+                  value={editFormData?.created_by_user?.id || ""}
+                  disabled
+                />
               </Form.Item>
             </Col>
           </Row>
