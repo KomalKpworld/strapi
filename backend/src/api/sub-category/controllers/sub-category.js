@@ -22,7 +22,7 @@ module.exports = createCoreController("api::sub-category.sub-category", ({ strap
           url: data.url,
           is_new: data.is_new,
           slider: data.slider,
-          created_by_id: user
+          created_by_user: user
         },
         files: {
           file: ctx.request.files["file"],
@@ -54,7 +54,7 @@ module.exports = createCoreController("api::sub-category.sub-category", ({ strap
           url: data.url,
           is_new: data.is_new,
           slider: data.slider,
-          updated_by_id: user
+          updated_by_user: user
         },
         files: {
           file: ctx.request.files["file"],
@@ -71,7 +71,7 @@ module.exports = createCoreController("api::sub-category.sub-category", ({ strap
     try {
       ctx.query = { ...ctx.query, local: "en" };
       const findData = await strapi.entityService.findMany("api::sub-category.sub-category", {
-        populate: { file: true, category_id: true, createdBy: true, updatedBy: true },
+        populate: { file: true, category_id: true, created_by_user:true, updated_by_user:true  },
       });
       return findData;
     }
@@ -84,7 +84,7 @@ module.exports = createCoreController("api::sub-category.sub-category", ({ strap
     try {
       const id = ctx.request.params.id;
       const findData = await strapi.entityService.findOne("api::sub-category.sub-category", id, {
-        populate: { file: true, category_id: true, createdBy: true, updatedBy: true }
+        populate: { file: true, category_id: true, created_by_user:true, updated_by_user:true }
       });
       return findData;
     } catch (error) {

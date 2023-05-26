@@ -16,7 +16,7 @@ module.exports = createCoreController('api::product.product', ({ strapi }) => ({
                     category_id: category_id,
                     sub_category_id: sub_category_id,
                     frame_type: data.frame_type,
-                    created_by_id: user
+                    created_by_user: user
                 },
                 files: {
                     file: ctx.request.files['file']
@@ -47,7 +47,7 @@ module.exports = createCoreController('api::product.product', ({ strapi }) => ({
                     category_id: category_id,
                     sub_category_id: sub_category_id,
                     frame_type: data.frame_type,
-                    updated_by_id: user
+                    updated_by_user: user
                 },
                 files: {
                     file: ctx.request.files['file']
@@ -67,7 +67,7 @@ module.exports = createCoreController('api::product.product', ({ strapi }) => ({
     async find(ctx) {
         try {
             const findData = await strapi.entityService.findMany('api::product.product', {
-                populate: { file: true, category_id: true, sub_category_id: true, createdBy: true, updatedBy: true }
+                populate: { file: true, category_id: true, sub_category_id: true,created_by_user:true, updated_by_user:true}
             });
             return (findData)
         } catch (error) {
@@ -77,7 +77,7 @@ module.exports = createCoreController('api::product.product', ({ strapi }) => ({
     async findOne(ctx) {
         try {
             const id = ctx.request.params.id
-            const entity = await strapi.entityService.findOne('api::product.product', id, { populate: { file: true, category_id: true, sub_category_id: true, createdBy: true, updatedBy: true } });
+            const entity = await strapi.entityService.findOne('api::product.product', id, { populate: { file: true, category_id: true, sub_category_id: true, created_by_user:true,updated_by_user:true } });
             return entity
         } catch (error) {
             return error
