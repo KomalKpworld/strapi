@@ -1,5 +1,5 @@
 // api.js
-const BASE_URL = "http://localhost:1337";
+const BASE_URL = "http://192.168.29.4:1337";
 
 //CategoriesName API
 export async function fetchCategoriesName() {
