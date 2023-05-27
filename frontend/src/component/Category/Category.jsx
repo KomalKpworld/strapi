@@ -30,8 +30,9 @@ const Category = () => {
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
   const token = localStorage.getItem("token");
   const [searchQuery, setSearchQuery] = useState("");
-   // eslint-disable-next-line
+  // eslint-disable-next-line
   const [selectedRows, setSelectedRows] = useState([]);
+  const [form] = Form.useForm();
 
   const initialColumns = [
     { field: "id", headerName: "ID", width: 100 },
@@ -155,6 +156,8 @@ const Category = () => {
   };
 
   const handleModalCancel = () => {
+    form.resetFields();
+    setFileNames([]);
     setCreateFormData({});
     setEditFormData({});
     setDeleteFormData({});
@@ -175,7 +178,8 @@ const Category = () => {
     setFileNames(fileNames);
   };
 
-  const handleCreateForm = async (values) => {
+  const handleCreateForm = async (values, event) => {
+    event.preventDefault();
     try {
       console.log("Form values After Create:", values);
 
@@ -193,6 +197,8 @@ const Category = () => {
           if (success) {
             console.log("Creating a new entry");
             setIsCreateModalOpen(false);
+            form.resetFields();
+            setFileNames([]);
             handleCategoryApi(searchQuery);
           } else {
             console.log("Failed to create entry");
@@ -209,7 +215,8 @@ const Category = () => {
     }
   };
 
-  const handleDeleteForm = async (values) => {
+  const handleDeleteForm = async (values, event) => {
+    event.preventDefault();
     try {
       console.log("Form values:", values);
 
@@ -226,6 +233,8 @@ const Category = () => {
             setData((prevData) =>
               prevData.filter((row) => row.id !== values.id)
             );
+            form.resetFields();
+            setFileNames([]);
             handleCategoryApi(searchQuery);
           } else {
             console.log("Failed to delete entry.");
@@ -244,7 +253,8 @@ const Category = () => {
     }
   };
 
-  const handleEditForm = async (values) => {
+  const handleEditForm = async (values, event) => {
+    event.preventDefault();
     try {
       console.log("Form values After Edit:", values);
       if (
@@ -264,12 +274,15 @@ const Category = () => {
           const success = await updateCategoryData(values.id, formData, token);
 
           if (success) {
+            console.log("Updating an entry");
             setIsEditModalOpen(false);
             setData((prevData) =>
               prevData.map((row) =>
                 row.id === values.id ? { ...row, ...values } : row
               )
             );
+            form.resetFields();
+            setFileNames([]);
             handleCategoryApi(searchQuery);
           } else {
             console.log("Failed to update entry");
@@ -302,9 +315,37 @@ const Category = () => {
         open={isDeleteModalOpen}
         onCancel={handleModalCancel}
         centered
-        footer={null}
+        footer={[
+          <div>
+            <Button
+              key="cancel"
+              onClick={handleModalCancel}
+              style={{
+                border: "2px solid #d1d5db",
+                backgroundColor: "transparent",
+                color: "black",
+                borderRadius: "10px",
+              }}
+            >
+              Cancel
+            </Button>{" "}
+            <Button
+              key="submit"
+              type="primary"
+              onClick={(event) =>
+                handleDeleteForm(form.getFieldsValue(), event)
+              }
+              style={{
+                borderRadius: "10px",
+              }}
+            >
+              Delete
+            </Button>
+          </div>,
+        ]}
       >
         <Form
+          form={form}
           onFinish={handleDeleteForm}
           initialValues={{ ...deleteFormData }}
           layout="vertical"
@@ -324,17 +365,6 @@ const Category = () => {
               </Form.Item>
             </Col>
           </Row>
-
-          <Form.Item>
-            <Button type="primary" htmltype="submit">
-              Delete
-            </Button>
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" onClick={handleModalCancel}>
-              Cancel
-            </Button>
-          </Form.Item>
         </Form>
       </Modal>
       {/* EditModal */}
@@ -344,9 +374,35 @@ const Category = () => {
         open={isEditModalOpen}
         onCancel={handleModalCancel}
         centered
-        footer={null}
+        footer={[
+          <div>
+            <Button
+              key="cancel"
+              onClick={handleModalCancel}
+              style={{
+                border: "2px solid #d1d5db",
+                backgroundColor: "transparent",
+                color: "black",
+                borderRadius: "10px",
+              }}
+            >
+              Cancel
+            </Button>{" "}
+            <Button
+              key="submit"
+              type="primary"
+              onClick={(event) => handleEditForm(form.getFieldsValue(), event)}
+              style={{
+                borderRadius: "10px",
+              }}
+            >
+              Update
+            </Button>
+          </div>,
+        ]}
       >
         <Form
+          form={form}
           onFinish={handleEditForm}
           initialValues={editFormData}
           layout="vertical"
@@ -389,6 +445,8 @@ const Category = () => {
               >
                 <input type="file" multiple onChange={handleFileChange} />
               </Form.Item>
+            </Col>
+            <Col span={12}>
               {fileNames.length > 0 && (
                 <div>
                   <strong>Selected File:</strong>
@@ -400,18 +458,7 @@ const Category = () => {
                 </div>
               )}
             </Col>
-            <Col span={12}></Col>
           </Row>
-          <Form.Item>
-            <Button type="primary" htmltype="submit">
-              Update
-            </Button>
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" onClick={handleModalCancel}>
-              Cancel
-            </Button>
-          </Form.Item>
         </Form>
       </Modal>
       {/* CreateModal */}
@@ -419,9 +466,37 @@ const Category = () => {
         open={isCreateModalOpen}
         title="Create Modal"
         onCancel={handleModalCancel}
-        footer={null}
+        footer={[
+          <div>
+            <Button
+              key="cancel"
+              onClick={handleModalCancel}
+              style={{
+                border: "2px solid #d1d5db",
+                backgroundColor: "transparent",
+                color: "black",
+                borderRadius: "10px",
+              }}
+            >
+              Cancel
+            </Button>{" "}
+            <Button
+              key="submit"
+              type="primary"
+              onClick={(event) =>
+                handleCreateForm(form.getFieldsValue(), event)
+              }
+              style={{
+                borderRadius: "10px",
+              }}
+            >
+              Create
+            </Button>
+          </div>,
+        ]}
       >
         <Form
+          form={form}
           onFinish={handleCreateForm}
           initialValues={createFormData}
           layout="vertical"
@@ -474,16 +549,12 @@ const Category = () => {
             </Col>
           </Row>
 
-          <Form.Item>
-            <Button type="primary" htmltype="submit">
-              Create
-            </Button>
+          {/* <Form.Item>
+            <Button htmltype="submit">Create</Button>
           </Form.Item>
           <Form.Item>
-            <Button type="primary" onClick={handleModalCancel}>
-              Cancel
-            </Button>
-          </Form.Item>
+            <Button onClick={handleModalCancel}>Cancel</Button>
+          </Form.Item> */}
         </Form>
       </Modal>
       <div>
