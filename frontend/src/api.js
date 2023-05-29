@@ -201,22 +201,6 @@ export async function deleteSubCategoryData(id, token) {
   }
 }
 
-//CategoryData API
-// export async function fetchCategoryData(token) {
-//   try {
-//     const res = await fetch(`${BASE_URL}/api/category`, {
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//       },
-//     });
-//     const data = await res.json();
-//     return data;
-//   } catch (err) {
-//     console.log(err);
-//     return [];
-//   }
-// }
-
 export async function fetchCategoryData() {
   try {
     const res = await fetch(`${BASE_URL}/api/category`);
