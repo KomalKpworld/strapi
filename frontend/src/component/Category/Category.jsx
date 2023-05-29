@@ -98,7 +98,7 @@ const Category = () => {
           type="text"
           danger
           onClick={() => handleEdit(params.row)}
-          icon={<EditOutlined />}
+          icon={<EditOutlined style={{ verticalAlign: "baseline" }} />}
           style={{
             color: "#25805b",
             background: "#def7ec",
@@ -116,7 +116,7 @@ const Category = () => {
           type="text"
           danger
           onClick={() => handleDelete(params.row)}
-          icon={<DeleteOutlined />}
+          icon={<DeleteOutlined style={{ verticalAlign: "baseline" }} />}
           style={{
             color: "#b34c4c",
             background: "#f6cccc",
@@ -593,8 +593,14 @@ const Category = () => {
           placeholder="Search..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          style={{ width: 200 }}
           suffix={<SearchOutlined />}
+          style={{
+            width: 200,
+            backgroundColor: "#fff",
+            border: "2px solid #e6e6e6",
+            borderRadius: "15px",
+            padding: "10px",
+          }}
         />
 
         <br />
