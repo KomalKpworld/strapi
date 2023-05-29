@@ -26,6 +26,8 @@ import {
   updateProductData,
   deleteProductData,
 } from "../../api";
+import BootstrapLoader from "../BootstrapLoader";
+
 
 const Product = () => {
   const navigate = useNavigate();
@@ -48,6 +50,8 @@ const Product = () => {
   // eslint-disable-next-line
   const [selectedRows, setSelectedRows] = useState([]);
   const [form] = Form.useForm();
+  const [isLoading, setIsLoading] = useState(false);
+
 
   const initialColumns = [
     { field: "id", headerName: "ID", width: 70 },
@@ -209,6 +213,7 @@ const Product = () => {
 
   const handleEditForm = async (values, event) => {
     event.preventDefault();
+    setIsLoading(true);
     try {
       console.log("Form values After Edit:", values);
       if (
@@ -253,10 +258,14 @@ const Product = () => {
         console.log("Error response:", err.response);
       }
     }
+    finally {
+      setIsLoading(false);
+    }
   };
 
   const handleCreateForm = async (values, event) => {
     event.preventDefault();
+    setIsLoading(true);
     try {
       console.log("Form values After Create:", values);
 
@@ -291,10 +300,14 @@ const Product = () => {
         console.log("Error response:", err.response);
       }
     }
+    finally {
+      setIsLoading(false);
+    }
   };
 
   const handleDeleteForm = async (values, event) => {
     event.preventDefault();
+    setIsLoading(true);
     try {
       console.log("Form values:", values);
       if (currentUser && currentUser.id) {
@@ -327,6 +340,9 @@ const Product = () => {
       if (err.response) {
         console.log("Error response:", err.response);
       }
+    }
+    finally {
+      setIsLoading(false);
     }
   };
 
@@ -380,6 +396,7 @@ const Product = () => {
             <Button
               key="submit"
               type="primary"
+              disabled={isLoading}
               onClick={(event) =>
                 handleCreateForm(form.getFieldsValue(), event)
               }
@@ -388,6 +405,7 @@ const Product = () => {
               }}
             >
               Create
+              {isLoading && <BootstrapLoader />}
             </Button>
           </div>,
         ]}
@@ -490,12 +508,14 @@ const Product = () => {
             <Button
               key="submit"
               type="primary"
+              disabled={isLoading}
               onClick={(event) => handleEditForm(form.getFieldsValue(), event)}
               style={{
                 borderRadius: "10px",
               }}
             >
               Update
+              {isLoading && <BootstrapLoader />}
             </Button>
           </div>,
         ]}
@@ -615,6 +635,7 @@ const Product = () => {
             <Button
               key="submit"
               type="primary"
+              disabled={isLoading}
               onClick={(event) =>
                 handleDeleteForm(form.getFieldsValue(), event)
               }
@@ -623,6 +644,7 @@ const Product = () => {
               }}
             >
               Delete
+              {isLoading && <BootstrapLoader />}
             </Button>
           </div>,
         ]}
