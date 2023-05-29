@@ -668,58 +668,42 @@ const Product = () => {
         </Form>
       </Modal>
 
-      <AntButton
-        type="text"
-        danger
-        onClick={handleCreate}
-        icon={<PlusOutlined />}
-        style={{
-          color: "#5250e6",
-          backgroundColor: "#f0f0ff",
-          border: "1px solid #ddddfe",
-        }}
-      >
-        Create New Product
-      </AntButton>
-
-      <br />
-      <br />
-
-      <Input
-        placeholder="Search..."
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        suffix={<SearchOutlined />}
-        style={{
-          width: 200,
-          backgroundColor: "#fff",
-          border: "2px solid #e6e6e6",
-          borderRadius: "15px",
-          padding: "10px",
-        }}
-      />
-
-      <br />
-      <br />
-
+      <div style={{ display: "flex", margin: "10px 0px" }}>
+        <Input
+          placeholder="Search..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          suffix={<SearchOutlined />}
+          style={{
+            width: 200,
+            backgroundColor: "#fff",
+            border: "2px solid #e6e6e6",
+            borderRadius: "15px",
+            padding: "10px 20px",
+          }}
+        />
+        <AntButton
+          type="text"
+          danger
+          onClick={handleCreate}
+          icon={<PlusOutlined />}
+          style={{
+            color: "#5250e6",
+            backgroundColor: "#f0f0ff",
+            border: "1px solid #ddddfe",
+            height: "auto",
+            padding: "10px 20px",
+            borderRadius: "15px",
+            display: "flex",
+            alignItems: "center",
+            marginLeft: "auto",
+            fontWeight: "700",
+          }}
+        >
+          Create New Product
+        </AntButton>
+      </div>
       <DataGrid
-        // rows={data}
-
-        // rows={data.filter((row) =>
-        //   row.category_name.toLowerCase().includes(searchQuery.toLowerCase())
-        // )}
-
-        // rows={data.filter((row) =>
-        //   Object.values(row).some(
-        //     (value) =>
-        //       value &&
-        //       value
-        //         .toString()
-        //         .toLowerCase()
-        //         .includes(searchQuery.toLowerCase())
-        //   )
-        // )}
-
         rows={data.filter((row) =>
           Object.keys(row).some((key) =>
             key === "category_id" || key === "sub_category_id"

@@ -574,55 +574,43 @@ const Category = () => {
         </Form>
       </Modal>
       <div>
-        <AntButton
-          type="text"
-          danger
-          onClick={handleCreate}
-          icon={<PlusOutlined />}
-          style={{
-            color: "#5250e6",
-            backgroundColor: "#f0f0ff",
-            border: "1px solid #ddddfe",
-          }}
-        >
-          Create New Category
-        </AntButton>
-        <br />
-        <br />
-        <Input
-          placeholder="Search..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          suffix={<SearchOutlined />}
-          style={{
-            width: 200,
-            backgroundColor: "#fff",
-            border: "2px solid #e6e6e6",
-            borderRadius: "15px",
-            padding: "10px",
-          }}
-        />
+        <div style={{ display: "flex", margin: "10px 0px" }}>
+          <Input
+            placeholder="Search..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            suffix={<SearchOutlined />}
+            style={{
+              width: 200,
+              backgroundColor: "#fff",
+              border: "2px solid #e6e6e6",
+              borderRadius: "15px",
+              padding: "5px 20px",
+            }}
+          />
+          <AntButton
+            type="text"
+            danger
+            onClick={handleCreate}
+            icon={<PlusOutlined />}
+            style={{
+              color: "#5250e6",
+              backgroundColor: "#f0f0ff",
+              border: "1px solid #ddddfe",
+              height: "auto",
+              padding: "10px 20px",
+              borderRadius: "15px",
+              display: "flex",
+              alignItems: "center",
+              marginLeft: "auto",
+              fontWeight: "700",
+            }}
+          >
+            Create New Category
+          </AntButton>
+        </div>
 
-        <br />
-        <br />
         <DataGrid
-          // rows={data}
-
-          // rows={data.filter((row) =>
-          //   row.category_name.toLowerCase().includes(searchQuery.toLowerCase())
-          // )}
-
-          // rows={data.filter((row) =>
-          //   Object.values(row).some(
-          //     (value) =>
-          //       value &&
-          //       value
-          //         .toString()
-          //         .toLowerCase()
-          //         .includes(searchQuery.toLowerCase())
-          //   )
-          // )}
-
           rows={data.filter((row) =>
             Object.keys(row).some(
               (key) =>
