@@ -28,7 +28,6 @@ import {
 } from "../../api";
 import BootstrapLoader from "../BootstrapLoader";
 
-
 const Product = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
@@ -51,7 +50,6 @@ const Product = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(false);
-
 
   const initialColumns = [
     { field: "id", headerName: "ID", width: 70 },
@@ -115,7 +113,7 @@ const Product = () => {
           type="text"
           danger
           onClick={() => handleEdit(params.row)}
-          icon={<EditOutlined />}
+          icon={<EditOutlined style={{ verticalAlign: "baseline" }} />}
           style={{
             color: "#25805b",
             background: "#def7ec",
@@ -133,7 +131,7 @@ const Product = () => {
           type="text"
           danger
           onClick={() => handleDelete(params.row)}
-          icon={<DeleteOutlined />}
+          icon={<DeleteOutlined style={{ verticalAlign: "baseline" }} />}
           style={{
             color: "#b34c4c",
             background: "#f6cccc",
@@ -164,7 +162,7 @@ const Product = () => {
 
   const fetchDataCategoryName = async () => {
     try {
-      const data = await fetchCategoriesName(token);
+      const data = await fetchCategoriesName();
       setCategoriesName(data);
       console.log(data, "name");
     } catch (error) {
@@ -257,8 +255,7 @@ const Product = () => {
       if (err.response) {
         console.log("Error response:", err.response);
       }
-    }
-    finally {
+    } finally {
       setIsLoading(false);
     }
   };
@@ -299,8 +296,7 @@ const Product = () => {
       if (err.response) {
         console.log("Error response:", err.response);
       }
-    }
-    finally {
+    } finally {
       setIsLoading(false);
     }
   };
@@ -340,8 +336,7 @@ const Product = () => {
       if (err.response) {
         console.log("Error response:", err.response);
       }
-    }
-    finally {
+    } finally {
       setIsLoading(false);
     }
   };
@@ -694,8 +689,14 @@ const Product = () => {
         placeholder="Search..."
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-        style={{ width: 200 }}
         suffix={<SearchOutlined />}
+        style={{
+          width: 200,
+          backgroundColor: "#fff",
+          border: "2px solid #e6e6e6",
+          borderRadius: "15px",
+          padding: "10px",
+        }}
       />
 
       <br />
@@ -720,13 +721,23 @@ const Product = () => {
         // )}
 
         rows={data.filter((row) =>
-          Object.keys(row).some(
-            (key) =>
-              row[key] &&
-              row[key]
-                .toString()
-                .toLowerCase()
-                .includes(searchQuery.toLowerCase())
+          Object.keys(row).some((key) =>
+            key === "category_id" || key === "sub_category_id"
+              ? row[key] &&
+                row[key][
+                  key === "category_id" ? "category_name" : "sub_category_name"
+                ] &&
+                row[key][
+                  key === "category_id" ? "category_name" : "sub_category_name"
+                ]
+                  .toString()
+                  .toLowerCase()
+                  .includes(searchQuery.toLowerCase())
+              : row[key] &&
+                row[key]
+                  .toString()
+                  .toLowerCase()
+                  .includes(searchQuery.toLowerCase())
           )
         )}
         columns={columns}
