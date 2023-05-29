@@ -82,7 +82,6 @@ module.exports = createCoreController('api::category.category', ({ strapi }) => 
         try {
             let query = `SELECT category_name , id FROM categories`
             let result = await strapi.db.connection.raw(query)
-            console.log(result.rows)
             return result.rows
         } catch (error) {
             return   "something went wrong"

@@ -8,7 +8,7 @@ const Navbar = ({ onLogout }) => {
   const classes = useStyles();
 
   return (
-    <>
+    <main>
       <AppBar position="fixed">
         <Toolbar className={classes.toolbar}>Admin Panel Project</Toolbar>
       </AppBar>
@@ -19,7 +19,7 @@ const Navbar = ({ onLogout }) => {
           </Drawer>
         </nav>
       </div>
-    </>
+    </main>
   );
 };
 

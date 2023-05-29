@@ -54,7 +54,7 @@ const SubCategory = () => {
     {
       field: "sub_category_name",
       headerName: "Sub Category Name",
-      width: 100,
+      width: 70,
       renderCell: (params) =>
         params.row.sub_category_name ? (
           params.row.sub_category_name
@@ -65,7 +65,7 @@ const SubCategory = () => {
     {
       field: "category_name",
       name: "Category Name",
-      width: 100,
+      width: 70,
       renderCell: ({ row }) =>
         row.category_id?.category_name ? (
           row.category_id?.category_name
@@ -76,7 +76,7 @@ const SubCategory = () => {
     {
       field: "status",
       headerName: "Status",
-      width: 100,
+      width: 70,
       renderCell: (params) =>
         params.row.status ? (
           params.row.status
@@ -87,7 +87,7 @@ const SubCategory = () => {
     {
       field: "move",
       headerName: "Move",
-      width: 100,
+      width: 70,
       renderCell: (params) =>
         params.row.move ? (
           params.row.move
@@ -98,7 +98,7 @@ const SubCategory = () => {
     {
       field: "is_new",
       headerName: "Is New",
-      width: 100,
+      width: 70,
       renderCell: (params) =>
         params.row.is_new ? (
           params.row.is_new.toString()
@@ -109,7 +109,7 @@ const SubCategory = () => {
     {
       field: "display_date",
       headerName: "Display Date",
-      width: 100,
+      width: 70,
       renderCell: (params) =>
         params.row.display_date ? (
           params.row.display_date
@@ -120,7 +120,7 @@ const SubCategory = () => {
     {
       field: "slider",
       headerName: "Slider",
-      width: 100,
+      width: 70,
       renderCell: (params) =>
         params.row.slider ? (
           params.row.slider
@@ -131,7 +131,7 @@ const SubCategory = () => {
     {
       field: "url",
       headerName: "URL",
-      width: 100,
+      width: 70,
       renderCell: (params) =>
         params.row.url ? (
           params.row.url
@@ -142,7 +142,7 @@ const SubCategory = () => {
     {
       field: "sub_category_image",
       headerName: "Sub Category Image",
-      width: 250,
+      width: 100,
       renderCell: (params) =>
         params.row.sub_category_image ? (
           params.row.sub_category_image
@@ -153,7 +153,7 @@ const SubCategory = () => {
     {
       field: "file",
       headerName: "File",
-      width: 150,
+      width: 100,
       renderCell: (params) => {
         const file = params.row.file ? params.row.file[0] : null;
         if (file) {
@@ -432,7 +432,7 @@ const SubCategory = () => {
   };
 
   return (
-    <div>
+    <main>
       {/* CreateModal */}
       <Modal
         open={isCreateModalOpen}
@@ -885,12 +885,13 @@ const SubCategory = () => {
             display: "flex",
             alignItems: "center",
             marginLeft: "auto",
-            fontWeight: "700"
+            fontWeight: "700",
           }}
         >
           Create New SubCategory
         </AntButton>
       </div>
+
       <DataGrid
         rows={data.filter((row) =>
           Object.keys(row).some((key) =>
@@ -919,14 +920,14 @@ const SubCategory = () => {
         onCellClick={handleCellClick}
         style={{
           boxShadow: "2px 2px 8px rgba(0, 0, 0, 0.1)",
-          marginTop: "5px",
+          borderRadius: "10px",
         }}
       />
 
       <Button mt="xl" onClick={() => navigate("/homepage")}>
         Go Back HomePage
       </Button>
-    </div>
+    </main>
   );
 };
 

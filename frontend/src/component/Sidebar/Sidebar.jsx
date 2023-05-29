@@ -13,7 +13,7 @@ const Sidebar = ({ onLogout }) => {
     }
   };
   return (
-    <>
+    <main>
       <List>
         <ListSubheader>COLLECTION TYPES</ListSubheader>
         <ListItem
@@ -49,7 +49,7 @@ const Sidebar = ({ onLogout }) => {
           <ListItemText>Logout</ListItemText>
         </ListItem>
       </List>
-    </>
+    </main>
   );
 };
 

@@ -366,7 +366,7 @@ const Product = () => {
   };
 
   return (
-    <div>
+    <main>
       {/* CreateModal */}
       <Modal
         title="Create Modal"
@@ -735,14 +735,14 @@ const Product = () => {
         onCellClick={handleCellClick}
         style={{
           boxShadow: "2px 2px 8px rgba(0, 0, 0, 0.1)",
-          marginTop: "5px",
+          borderRadius: "10px",
         }}
       />
 
       <Button mt="xl" onClick={() => navigate("/homepage")}>
         Go Back HomePage
       </Button>
-    </div>
+    </main>
   );
 };
 
