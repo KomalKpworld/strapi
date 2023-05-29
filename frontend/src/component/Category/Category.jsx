@@ -15,6 +15,7 @@ import {
   updateCategoryData,
   deleteCategoryData,
 } from "../../api";
+import BootstrapLoader from "../BootstrapLoader";
 
 const Category = () => {
   const navigate = useNavigate();
@@ -33,6 +34,7 @@ const Category = () => {
   // eslint-disable-next-line
   const [selectedRows, setSelectedRows] = useState([]);
   const [form] = Form.useForm();
+  const [isLoading, setIsLoading] = useState(false);
 
   const initialColumns = [
     { field: "id", headerName: "ID", width: 100 },
@@ -180,6 +182,7 @@ const Category = () => {
 
   const handleCreateForm = async (values, event) => {
     event.preventDefault();
+    setIsLoading(true);
     try {
       console.log("Form values After Create:", values);
 
@@ -212,11 +215,14 @@ const Category = () => {
       if (err.response) {
         console.log("Error response:", err.response);
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleDeleteForm = async (values, event) => {
     event.preventDefault();
+    setIsLoading(true);
     try {
       console.log("Form values:", values);
 
@@ -250,11 +256,14 @@ const Category = () => {
       if (err.response) {
         console.log("Error response:", err.response);
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleEditForm = async (values, event) => {
     event.preventDefault();
+    setIsLoading(true);
     try {
       console.log("Form values After Edit:", values);
       if (
@@ -296,6 +305,8 @@ const Category = () => {
       if (err.response) {
         console.log("Error response:", err.response);
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -332,6 +343,7 @@ const Category = () => {
             <Button
               key="submit"
               type="primary"
+              disabled={isLoading}
               onClick={(event) =>
                 handleDeleteForm(form.getFieldsValue(), event)
               }
@@ -340,6 +352,7 @@ const Category = () => {
               }}
             >
               Delete
+              {isLoading && <BootstrapLoader />}
             </Button>
           </div>,
         ]}
@@ -391,12 +404,14 @@ const Category = () => {
             <Button
               key="submit"
               type="primary"
+              disabled={isLoading}
               onClick={(event) => handleEditForm(form.getFieldsValue(), event)}
               style={{
                 borderRadius: "10px",
               }}
             >
               Update
+              {isLoading && <BootstrapLoader />}
             </Button>
           </div>,
         ]}
@@ -483,6 +498,7 @@ const Category = () => {
             <Button
               key="submit"
               type="primary"
+              disabled={isLoading}
               onClick={(event) =>
                 handleCreateForm(form.getFieldsValue(), event)
               }
@@ -490,7 +506,7 @@ const Category = () => {
                 borderRadius: "10px",
               }}
             >
-              Create
+              Create {isLoading && <BootstrapLoader />}
             </Button>
           </div>,
         ]}
