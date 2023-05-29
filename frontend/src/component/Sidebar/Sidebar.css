@@ -1,0 +1,18 @@
+.listItem {
+  padding: 10px !important;
+  background-color: #ffff !important;
+}
+
+.listItem:hover,
+.listItem:focus,
+.listItem:active,
+.listItem:focus-within,
+.listItem:focus-visible,
+.listItem:hover:focus,
+.listItem:hover:active,
+.listItem:hover:focus-within,
+.listItem:hover:focus-visible {
+  font-weight: 700;
+  color: #2876d2;
+  background-color: #f1f1f7 !important;
+}
