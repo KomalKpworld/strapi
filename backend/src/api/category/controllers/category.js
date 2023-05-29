@@ -92,7 +92,7 @@ module.exports = createCoreController('api::category.category', ({ strapi }) => 
     async findSubCategoryWithName(ctx) {
         try {
             let categoryId = ctx.request.params.categoryId
-            let query = `SELECT s.sub_category_name FROM sub_categories_category_id_links scid INNER JOIN sub_categories s  ON s.id = scid.sub_category_id WHERE scid.category_id = ${categoryId}`
+            let query = `SELECT s.id, s.sub_category_name FROM sub_categories_category_id_links scid INNER JOIN sub_categories s  ON s.id = scid.sub_category_id WHERE scid.category_id = ${categoryId}`
             let result = await strapi.db.connection.raw(query)
             return result.rows
         } catch (error) {
