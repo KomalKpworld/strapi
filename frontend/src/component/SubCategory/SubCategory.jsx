@@ -25,6 +25,7 @@ import {
   updateSubCategoryData,
   deleteSubCategoryData,
 } from "../../api";
+import BootstrapLoader from "../BootstrapLoader";
 
 const SubCategory = () => {
   const navigate = useNavigate();
@@ -46,6 +47,7 @@ const SubCategory = () => {
   // eslint-disable-next-line
   const [selectedRows, setSelectedRows] = useState([]);
   const [form] = Form.useForm();
+  const [isLoading, setIsLoading] = useState(false);
 
   const initialColumns = [
     { field: "id", headerName: "ID", width: 70 },
@@ -240,6 +242,7 @@ const SubCategory = () => {
 
   const handleCreateForm = async (values, event) => {
     event.preventDefault();
+    setIsLoading(true);
     try {
       console.log("Form values After Create:", values);
 
@@ -278,11 +281,14 @@ const SubCategory = () => {
       if (err.response) {
         console.log("Error response:", err.response);
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleEditForm = async (values, event) => {
     event.preventDefault();
+    setIsLoading(true);
     try {
       console.log("Form values After Edit:", values);
       if (
@@ -335,6 +341,8 @@ const SubCategory = () => {
       if (err.response) {
         console.log("Error response:", err.response);
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -366,6 +374,7 @@ const SubCategory = () => {
 
   const handleDeleteForm = async (values, event) => {
     event.preventDefault();
+    setIsLoading(true);
     try {
       console.log("Form values:", values);
       if (currentUser && currentUser.id) {
@@ -398,6 +407,8 @@ const SubCategory = () => {
       if (err.response) {
         console.log("Error response:", err.response);
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -444,6 +455,7 @@ const SubCategory = () => {
             <Button
               key="submit"
               type="primary"
+              disabled={isLoading}
               onClick={(event) =>
                 handleCreateForm(form.getFieldsValue(), event)
               }
@@ -452,6 +464,7 @@ const SubCategory = () => {
               }}
             >
               Create
+              {isLoading && <BootstrapLoader />}
             </Button>
           </div>,
         ]}
@@ -639,12 +652,14 @@ const SubCategory = () => {
             <Button
               key="submit"
               type="primary"
+              disabled={isLoading}
               onClick={(event) => handleEditForm(form.getFieldsValue(), event)}
               style={{
                 borderRadius: "10px",
               }}
             >
               Update
+              {isLoading && <BootstrapLoader />}
             </Button>
           </div>,
         ]}
@@ -804,6 +819,7 @@ const SubCategory = () => {
             <Button
               key="submit"
               type="primary"
+              disabled={isLoading}
               onClick={(event) =>
                 handleDeleteForm(form.getFieldsValue(), event)
               }
@@ -812,6 +828,7 @@ const SubCategory = () => {
               }}
             >
               Delete
+              {isLoading && <BootstrapLoader />}
             </Button>
           </div>,
         ]}
