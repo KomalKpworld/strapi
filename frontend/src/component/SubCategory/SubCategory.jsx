@@ -43,6 +43,9 @@ const SubCategory = () => {
   const token = localStorage.getItem("token");
   const [isNew, setIsNew] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  // eslint-disable-next-line
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [form] = Form.useForm();
 
   const initialColumns = [
     { field: "id", headerName: "ID", width: 70 },
@@ -205,7 +208,7 @@ const SubCategory = () => {
   useEffect(() => {
     fetchDataCategoryName();
     handleCategoryApi();
-     // eslint-disable-next-line
+    // eslint-disable-next-line
   }, []);
 
   const handleCategoryApi = async (searchQuery = "") => {
@@ -235,7 +238,8 @@ const SubCategory = () => {
     setIsCreateModalOpen(true);
   };
 
-  const handleCreateForm = async (values) => {
+  const handleCreateForm = async (values, event) => {
+    event.preventDefault();
     try {
       console.log("Form values After Create:", values);
 
@@ -259,6 +263,8 @@ const SubCategory = () => {
           if (success) {
             console.log("Creating Successfull");
             setIsCreateModalOpen(false);
+            form.resetFields();
+            setFileNames([]);
             handleCategoryApi(searchQuery);
           } else {
             console.log("Failed to create entry");
@@ -275,7 +281,8 @@ const SubCategory = () => {
     }
   };
 
-  const handleEditForm = async (values) => {
+  const handleEditForm = async (values, event) => {
+    event.preventDefault();
     try {
       console.log("Form values After Edit:", values);
       if (
@@ -313,6 +320,8 @@ const SubCategory = () => {
                 row.id === values.id ? { ...row, ...values } : row
               )
             );
+            form.resetFields();
+            setFileNames([]);
             handleCategoryApi(searchQuery);
           } else {
             console.log("Failed to update entry");
@@ -330,6 +339,11 @@ const SubCategory = () => {
   };
 
   const handleModalCancel = () => {
+    form.resetFields();
+    setFileNames([]);
+    setCreateFormData({});
+    setEditFormData({});
+    setDeleteFormData({});
     setIsCreateModalOpen(false);
     setIsEditModalOpen(false);
     setIsDeleteModalOpen(false);
@@ -350,11 +364,15 @@ const SubCategory = () => {
     setSelectedValue(value);
   };
 
-  const handleDeleteForm = async (values) => {
+  const handleDeleteForm = async (values, event) => {
+    event.preventDefault();
     try {
       console.log("Form values:", values);
       if (currentUser && currentUser.id) {
-        if (values.created_by_user && values.created_by_user.id === currentUser.id) {
+        if (
+          values.created_by_user &&
+          values.created_by_user.id === currentUser.id
+        ) {
           const success = await deleteSubCategoryData(values.id, token);
 
           if (success) {
@@ -363,6 +381,8 @@ const SubCategory = () => {
             setData((prevData) =>
               prevData.filter((row) => row.id !== values.id)
             );
+            form.resetFields();
+            setFileNames([]);
             handleCategoryApi(searchQuery);
           } else {
             console.log("Failed to delete entry");
@@ -387,9 +407,17 @@ const SubCategory = () => {
     const fileNames = selectedFiles.map((file) => file.name);
     setFileNames(fileNames);
   };
+
   const handleIsNewChange = (value) => {
     console.log(value, "IsNew");
     setIsNew(value);
+  };
+
+  const handleCellClick = (params) => {
+    const selectedRow = params.row;
+    console.log("Selected Row:", selectedRow);
+    setSelectedRows(selectedRow);
+    // Perform any additional actions with the selected row
   };
 
   return (
@@ -399,9 +427,37 @@ const SubCategory = () => {
         open={isCreateModalOpen}
         title="Create Modal"
         onCancel={handleModalCancel}
-        footer={null}
+        footer={[
+          <div>
+            <Button
+              key="cancel"
+              onClick={handleModalCancel}
+              style={{
+                border: "2px solid #d1d5db",
+                backgroundColor: "transparent",
+                color: "black",
+                borderRadius: "10px",
+              }}
+            >
+              Cancel
+            </Button>{" "}
+            <Button
+              key="submit"
+              type="primary"
+              onClick={(event) =>
+                handleCreateForm(form.getFieldsValue(), event)
+              }
+              style={{
+                borderRadius: "10px",
+              }}
+            >
+              Create
+            </Button>
+          </div>,
+        ]}
       >
         <Form
+          form={form}
           onFinish={handleCreateForm}
           initialValues={createFormData}
           layout="vertical"
@@ -557,17 +613,6 @@ const SubCategory = () => {
               )}
             </Col>
           </Row>
-
-          <Form.Item>
-            <Button type="primary" htmltype="submit">
-              Create
-            </Button>
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" onClick={handleModalCancel}>
-              Cancel
-            </Button>
-          </Form.Item>
         </Form>
       </Modal>
       {/* EditModal */}
@@ -577,9 +622,35 @@ const SubCategory = () => {
         open={isEditModalOpen}
         onCancel={handleModalCancel}
         centered
-        footer={null}
+        footer={[
+          <div>
+            <Button
+              key="cancel"
+              onClick={handleModalCancel}
+              style={{
+                border: "2px solid #d1d5db",
+                backgroundColor: "transparent",
+                color: "black",
+                borderRadius: "10px",
+              }}
+            >
+              Cancel
+            </Button>{" "}
+            <Button
+              key="submit"
+              type="primary"
+              onClick={(event) => handleEditForm(form.getFieldsValue(), event)}
+              style={{
+                borderRadius: "10px",
+              }}
+            >
+              Update
+            </Button>
+          </div>,
+        ]}
       >
         <Form
+          form={form}
           onFinish={handleEditForm}
           initialValues={editFormData}
           layout="vertical"
@@ -592,7 +663,10 @@ const SubCategory = () => {
             </Col>
             <Col span={12}>
               <Form.Item label="created_by_user" name="created_by_user" hidden>
-                <Input value={editFormData?.created_by_user?.id || ""} disabled />
+                <Input
+                  value={editFormData?.created_by_user?.id || ""}
+                  disabled
+                />
               </Form.Item>
             </Col>
           </Row>
@@ -655,7 +729,7 @@ const SubCategory = () => {
 
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item label="is_new" name="is_new">
+              <Form.Item label="is_new" name="iss_new">
                 <Segmented
                   options={[
                     {
@@ -704,17 +778,6 @@ const SubCategory = () => {
               )}
             </Col>
           </Row>
-
-          <Form.Item>
-            <Button type="primary" htmltype="submit">
-              Update
-            </Button>
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" onClick={handleModalCancel}>
-              Cancel
-            </Button>
-          </Form.Item>
         </Form>
       </Modal>
       {/* DeleteModal */}
@@ -724,9 +787,37 @@ const SubCategory = () => {
         open={isDeleteModalOpen}
         onCancel={handleModalCancel}
         centered
-        footer={null}
+        footer={[
+          <div>
+            <Button
+              key="cancel"
+              onClick={handleModalCancel}
+              style={{
+                border: "2px solid #d1d5db",
+                backgroundColor: "transparent",
+                color: "black",
+                borderRadius: "10px",
+              }}
+            >
+              Cancel
+            </Button>{" "}
+            <Button
+              key="submit"
+              type="primary"
+              onClick={(event) =>
+                handleDeleteForm(form.getFieldsValue(), event)
+              }
+              style={{
+                borderRadius: "10px",
+              }}
+            >
+              Delete
+            </Button>
+          </div>,
+        ]}
       >
         <Form
+          form={form}
           onFinish={handleDeleteForm}
           initialValues={{ ...deleteFormData }}
           layout="vertical"
@@ -739,21 +830,13 @@ const SubCategory = () => {
             </Col>
             <Col span={12}>
               <Form.Item label="created_by_user" name="created_by_user" hidden>
-                <Input value={deleteFormData?.created_by_user?.id || ""} disabled />
+                <Input
+                  value={deleteFormData?.created_by_user?.id || ""}
+                  disabled
+                />
               </Form.Item>
             </Col>
           </Row>
-
-          <Form.Item>
-            <Button type="primary" htmltype="submit">
-              Delete
-            </Button>
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" onClick={handleModalCancel}>
-              Cancel
-            </Button>
-          </Form.Item>
         </Form>
       </Modal>
 
@@ -820,6 +903,7 @@ const SubCategory = () => {
         }}
         pageSizeOptions={[2, 3, 5, 10, 20, 30, 50, 100]}
         checkboxSelection
+        onCellClick={handleCellClick}
         style={{
           boxShadow: "2px 2px 8px rgba(0, 0, 0, 0.1)",
           marginTop: "5px",
