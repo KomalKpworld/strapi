@@ -1,7 +1,7 @@
 'use strict';
 
 const { createCoreController } = require('@strapi/strapi').factories;
-const { deleteProductFile, updateImageUrl } = require("../services/product")
+const { deleteProductFile, updateImageUrl,deleteAllProducts } = require("../services/product")
 module.exports = createCoreController('api::product.product', ({ strapi }) => ({
 
     async createProduct(ctx) {
@@ -22,12 +22,12 @@ module.exports = createCoreController('api::product.product', ({ strapi }) => ({
                     file: ctx.request.files['file']
                 }
             });
-            let id = entry.id         
-                let update = await updateImageUrl(id)
-                if(update.err){
-                    return update.err
-                }
-                return update.updateEtntry
+            let id = entry.id
+            let update = await updateImageUrl(id)
+            if (update.err) {
+                return update.err
+            }
+            return update.updateEtntry
 
         } catch (error) {
             return error
@@ -54,10 +54,10 @@ module.exports = createCoreController('api::product.product', ({ strapi }) => ({
                 },
             });
             let update = await updateImageUrl(id)
-                if(update.err){
-                    return update.err
-                }
-                return update.updateEtntry
+            if (update.err) {
+                return update.err
+            }
+            return update.updateEtntry
 
         } catch (error) {
             return error
@@ -67,7 +67,7 @@ module.exports = createCoreController('api::product.product', ({ strapi }) => ({
     async find(ctx) {
         try {
             const findData = await strapi.entityService.findMany('api::product.product', {
-                populate: { file: true, category_id: true, sub_category_id: true,created_by_user:true, updated_by_user:true}
+                populate: { file: true, category_id: true, sub_category_id: true, created_by_user: true, updated_by_user: true }
             });
             return (findData)
         } catch (error) {
@@ -77,13 +77,23 @@ module.exports = createCoreController('api::product.product', ({ strapi }) => ({
     async findOne(ctx) {
         try {
             const id = ctx.request.params.id
-            const entity = await strapi.entityService.findOne('api::product.product', id, { populate: { file: true, category_id: true, sub_category_id: true, created_by_user:true,updated_by_user:true } });
+            const entity = await strapi.entityService.findOne('api::product.product', id, { populate: { file: true, category_id: true, sub_category_id: true, created_by_user: true, updated_by_user: true } });
             return entity
         } catch (error) {
             return error
         }
     },
-
+    async deleteAll(ctx) {
+        try {
+            let deleteProduct = await deleteAllProducts()
+            if (deleteProduct.err) {
+                return ctx.send(deleteProduct.err)
+            }
+            return ctx.send({ message: `Deleted  records.` })
+        } catch (error) {
+            return ctx.send({ error: 'An error occurred while deleting records.' });
+        }
+    },
     async delete(ctx) {
         try {
             const id = ctx.request.params.id

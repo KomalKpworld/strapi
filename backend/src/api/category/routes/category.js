@@ -43,10 +43,16 @@ module.exports = {
     },
     {
       method: 'DELETE',
+      path: '/category/delete-all',
+      handler: 'category.deleteAll'
+    },
+    {
+      method: 'DELETE',
       path: '/category/:id',
       handler: 'category.deleteCategory'
-    }
+    },
+  
 
-
+    
   ]
   }

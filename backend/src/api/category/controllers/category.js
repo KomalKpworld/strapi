@@ -1,6 +1,8 @@
 'use strict';
 
-const { subCategoryProductRecordDelete, updateImageUrl, deleteCategoryFile } = require('../services/category')
+const { subCategoryProductRecordDelete, updateImageUrl, deleteCategoryFile, deleteAllCategory  } = require('../services/category')
+const {deleteAllSubCategory} = require('../../sub-category/services/sub-category')
+const {deleteAllProducts} = require('../../product/services/product')
 /**
  * category controller
  */
@@ -99,7 +101,25 @@ module.exports = createCoreController('api::category.category', ({ strapi }) => 
             return   "something went wrong"
         }
     },
-
+    async deleteAll(ctx) {
+        try {
+            let deleteProduct = await deleteAllProducts()
+            if (deleteProduct.err) {
+                return ctx.send(deleteProduct.err)
+            }
+            let deleteSubcategory = await deleteAllSubCategory()
+            if (deleteSubcategory.err) {
+              return ctx.send(deleteSubcategory.err) 
+            }
+        let categoryDelete= await deleteAllCategory()
+        if(categoryDelete.err){
+            return ctx.send(categoryDelete.err) 
+        }
+            return ctx.send({ message: `Deleted  records.` })
+            } catch (error) {
+              return ctx.send({ error: 'An error occurred while deleting records.' });
+            }
+    },
     async deleteCategory(ctx) {
         try {
             const id = ctx.request.params.id
@@ -113,5 +133,6 @@ module.exports = createCoreController('api::category.category', ({ strapi }) => 
         } catch (error) {
             return   "something went wrong"
         }
-    }
+    },
+   
 }));

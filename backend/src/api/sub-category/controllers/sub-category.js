@@ -1,7 +1,7 @@
 "use strict";
 
-const { deleteSubCategoryFile, validedData, productFileDelete, updateImageUrl } = require('../services/sub-category');
-
+const { deleteSubCategoryFile, validedData, productFileDelete, updateImageUrl, deleteAllSubCategory } = require('../services/sub-category');
+const { deleteAllProducts } = require('../../product/services/product');
 const { createCoreController } = require("@strapi/strapi").factories;
 
 module.exports = createCoreController("api::sub-category.sub-category", ({ strapi }) => ({
@@ -71,7 +71,7 @@ module.exports = createCoreController("api::sub-category.sub-category", ({ strap
     try {
       ctx.query = { ...ctx.query, local: "en" };
       const findData = await strapi.entityService.findMany("api::sub-category.sub-category", {
-        populate: { file: true, category_id: true, created_by_user:true, updated_by_user:true  },
+        populate: { file: true, category_id: true, created_by_user: true, updated_by_user: true },
       });
       return findData;
     }
@@ -84,14 +84,28 @@ module.exports = createCoreController("api::sub-category.sub-category", ({ strap
     try {
       const id = ctx.request.params.id;
       const findData = await strapi.entityService.findOne("api::sub-category.sub-category", id, {
-        populate: { file: true, category_id: true, created_by_user:true, updated_by_user:true }
+        populate: { file: true, category_id: true, created_by_user: true, updated_by_user: true }
       });
       return findData;
     } catch (error) {
       return error
     }
   },
-
+  async deleteAll(ctx) {
+    try {
+      let deleteSubcategory = await deleteAllSubCategory()
+      if (deleteSubcategory.err) {
+        return ctx.send(deleteSubcategory.err)
+      }
+      let deleteProduct = await deleteAllProducts()
+      if (deleteProduct.err) {
+        return ctx.send(deleteProduct.err)
+      }
+      return ctx.send({ message: `Deleted  records.` })
+    } catch (error) {
+      return ctx.send({ error: 'An error occurred while deleting records.' });
+    }
+  },
   async deleteSubCategory(ctx) {
     try {
       let id = ctx.request.params.id;

@@ -88,6 +88,28 @@ module.exports = {
         catch (err) {
             return { err: "Something went wrong" }
         }
+    },
+    async deleteAllSubCategory() {
+        try {
+            let query2 = `SELECT s.id as sub_categories_id, fid.related_id as fileReletedid, ffl.file_id as folder_file_link, fid.id as fileId  FROM sub_categories s
+            INNER JOIN files_related_morphs  fid  ON fid.related_id = s.id
+            INNER JOIN files_folder_links ffl ON ffl.file_id = fid.file_id 
+            INNER JOIN files f ON f.id = ffl.file_id `;
+            let result4 = await strapi.db.connection.raw(query2);
+            if (result4.rows.length !== 0) {
+                let subCategoriesFileDelete = `DELETE FROM files WHERE id= ${result4.rows[0].fileid}`;
+                let subCategoriesFileFolderDataDelete = `DELETE FROM files_folder_links WHERE file_id= ${result4.rows[0].folder_file_link}`;
+                let subCategoriesFileDeleteResult = await strapi.db.connection.raw(subCategoriesFileDelete);
+                let subCategoriesFolderyFileDeleteResult = await strapi.db.connection.raw(subCategoriesFileFolderDataDelete);
+            }
+            let queryforDeletSubCategory = `DELETE FROM sub_categories`
+            let queryForSubCategoryFIleDelete = `DELETE FROM files_related_morphs where related_type = 'api::sub-category.sub-category'`
+            let deleteSubCategoryFiles = await strapi.db.connection.raw(queryForSubCategoryFIleDelete)
+            let deleteSubCategory = await strapi.db.connection.raw(queryforDeletSubCategory)
+            return { message: `Deleted  records.` }
+        } catch (error) {
+            return { err: "Something went wrong" }
+        }
     }
 }
 

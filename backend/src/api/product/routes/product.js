@@ -1,5 +1,7 @@
 'use strict';
 
+const product = require('../services/product');
+
 /**
  * product router
  */
@@ -29,6 +31,11 @@ module.exports = {
       method: 'PUT',
       path: '/product/:id',
       handler: 'product.update',
+    },
+    {
+      method: 'DELETE',
+      path:'/product/delete-all',
+      handler: 'product.deleteAll'
     },
     {
       method: 'DELETE',
