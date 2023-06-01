@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
-import { DataGrid } from "@mui/x-data-grid";
 import {
   Button as AntButton,
   Modal,
@@ -11,6 +10,7 @@ import {
   Col,
   Select,
   Segmented,
+  Table,
 } from "antd";
 import {
   DeleteOutlined,
@@ -48,114 +48,122 @@ const SubCategory = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedRecords, setSelectedRecords] = useState([]);
 
   const initialColumns = [
-    { field: "id", headerName: "ID", width: 70 },
     {
-      field: "sub_category_name",
-      headerName: "Sub Category Name",
+      title: "No.",
+      dataIndex: "rowNumber",
+      width: 50,
+      key: "rowNumber",
+      render: (text, record, index) => index + 1,
+    },
+    {
+      title: "ID",
+      dataIndex: "id",
+      width: 50,
+    },
+    {
+      title: "Sub Category Name",
+      dataIndex: "sub_category_name",
       width: 70,
-      renderCell: (params) =>
-        params.row.sub_category_name ? (
-          params.row.sub_category_name
+      render: (text, record) =>
+        record.sub_category_name ? (
+          record.sub_category_name
         ) : (
           <span style={{ color: "green" }}>Empty</span>
         ),
     },
     {
-      field: "category_name",
-      name: "Category Name",
+      title: "Category Name",
+      dataIndex: "category_name",
       width: 70,
-      renderCell: ({ row }) =>
-        row.category_id?.category_name ? (
-          row.category_id?.category_name
+      render: (text, record) =>
+        record.category_id?.category_name ? (
+          record.category_id.category_name
         ) : (
           <span style={{ color: "green" }}>Empty</span>
         ),
     },
     {
-      field: "status",
-      headerName: "Status",
-      width: 70,
-      renderCell: (params) =>
-        params.row.status ? (
-          params.row.status
+      title: "Status",
+      dataIndex: "status",
+      width: 50,
+      render: (text, record) =>
+        record.status ? (
+          record.status
         ) : (
           <span style={{ color: "green" }}>Empty</span>
         ),
     },
     {
-      field: "move",
-      headerName: "Move",
-      width: 70,
-      renderCell: (params) =>
-        params.row.move ? (
-          params.row.move
+      title: "Move",
+      dataIndex: "move",
+      width: 50,
+      render: (text, record) =>
+        record.move ? (
+          record.move
         ) : (
           <span style={{ color: "green" }}>Empty</span>
         ),
     },
     {
-      field: "is_new",
-      headerName: "Is New",
-      width: 70,
-      renderCell: (params) =>
-        params.row.is_new ? (
-          params.row.is_new.toString()
+      title: "Is New",
+      dataIndex: "is_new",
+      width: 50,
+      render: (text, record) =>
+        record.is_new ? (
+          record.is_new.toString()
         ) : (
           <span style={{ color: "green" }}>Empty</span>
         ),
     },
     {
-      field: "display_date",
-      headerName: "Display Date",
-      width: 70,
-      renderCell: (params) =>
-        params.row.display_date ? (
-          params.row.display_date
+      title: "Display Date",
+      dataIndex: "display_date",
+      width: 50,
+      render: (text, record) =>
+        record.display_date ? (
+          record.display_date
         ) : (
           <span style={{ color: "green" }}>Empty</span>
         ),
     },
     {
-      field: "slider",
-      headerName: "Slider",
-      width: 70,
-      renderCell: (params) =>
-        params.row.slider ? (
-          params.row.slider
+      title: "Slider",
+      dataIndex: "slider",
+      width: 50,
+      render: (text, record) =>
+        record.slider ? (
+          record.slider
         ) : (
           <span style={{ color: "green" }}>Empty</span>
         ),
     },
     {
-      field: "url",
-      headerName: "URL",
-      width: 70,
-      renderCell: (params) =>
-        params.row.url ? (
-          params.row.url
-        ) : (
-          <span style={{ color: "green" }}>Empty</span>
-        ),
+      title: "URL",
+      dataIndex: "url",
+      width: 50,
+      render: (text, record) =>
+        record.url ? record.url : <span style={{ color: "green" }}>Empty</span>,
     },
     {
-      field: "sub_category_image",
-      headerName: "Sub Category Image",
+      title: "Sub Category Image",
+      dataIndex: "sub_category_image",
       width: 100,
-      renderCell: (params) =>
-        params.row.sub_category_image ? (
-          params.row.sub_category_image
+      render: (text, record) =>
+        record.sub_category_image ? (
+          record.sub_category_image
         ) : (
           <span style={{ color: "green" }}>Empty</span>
         ),
     },
     {
-      field: "file",
-      headerName: "File",
-      width: 100,
-      renderCell: (params) => {
-        const file = params.row.file ? params.row.file[0] : null;
+      title: "File",
+      dataIndex: "file",
+      width: 70,
+      render: (text, record) => {
+        const file = record.file ? record.file[0] : null;
         if (file) {
           return (
             <a href={file.url} target="_blank" rel="noopener noreferrer">
@@ -168,14 +176,14 @@ const SubCategory = () => {
       },
     },
     {
-      field: "edit",
-      headerName: " ",
-      width: 70,
-      renderCell: (params) => (
+      title: "Edit",
+      dataIndex: "edit",
+      width: 50,
+      render: (text, record) => (
         <AntButton
           type="text"
           danger
-          onClick={() => handleEdit(params.row)}
+          onClick={() => handleEdit(record)}
           icon={<EditOutlined style={{ verticalAlign: "baseline" }} />}
           style={{
             color: "#25805b",
@@ -186,14 +194,14 @@ const SubCategory = () => {
       ),
     },
     {
-      field: "delete",
-      headerName: " ",
-      width: 70,
-      renderCell: (params) => (
+      title: "Delete",
+      dataIndex: "delete",
+      width: 50,
+      render: (text, record) => (
         <AntButton
           type="text"
           danger
-          onClick={() => handleDelete(params.row)}
+          onClick={() => handleDelete(record)}
           icon={<DeleteOutlined style={{ verticalAlign: "baseline" }} />}
           style={{
             color: "#b34c4c",
@@ -204,8 +212,11 @@ const SubCategory = () => {
       ),
     },
   ];
+
   // eslint-disable-next-line
   const [columns, setColumns] = useState(initialColumns);
+
+  // JSX code...
 
   useEffect(() => {
     fetchDataCategoryName();
@@ -223,15 +234,15 @@ const SubCategory = () => {
     }
   };
 
-  const handleDelete = (row) => {
-    console.log("Select for Delete", row);
-    setDeleteFormData({ ...row });
+  const handleDelete = (record) => {
+    console.log("Select for Delete", record);
+    setDeleteFormData({ ...record });
     setIsDeleteModalOpen(true);
   };
 
-  const handleEdit = (row) => {
-    console.log("Select for Edit", row);
-    setEditFormData(row);
+  const handleEdit = (record) => {
+    console.log("Select for Edit", record);
+    setEditFormData(record);
     setIsEditModalOpen(true);
   };
 
@@ -424,11 +435,12 @@ const SubCategory = () => {
     setIsNew(value);
   };
 
-  const handleCellClick = (params) => {
-    const selectedRow = params.row;
-    console.log("Selected Row:", selectedRow);
-    setSelectedRows(selectedRow);
-    // Perform any additional actions with the selected row
+  const rowSelection = {
+    type: "checkbox",
+    selectedRowKeys: selectedRecords,
+    onChange: (selectedRows) => {
+      setSelectedRecords(selectedRows);
+    },
   };
 
   return (
@@ -892,8 +904,10 @@ const SubCategory = () => {
         </AntButton>
       </div>
 
-      <DataGrid
-        rows={data.filter((row) =>
+      <Table
+        rowKey="id"
+        rowSelection={rowSelection}
+        dataSource={data.filter((row) =>
           Object.keys(row).some((key) =>
             key === "category_id"
               ? row[key] &&
@@ -910,17 +924,15 @@ const SubCategory = () => {
           )
         )}
         columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: { page: 0, pageSize: 5 },
-          },
-        }}
-        pageSizeOptions={[2, 3, 5, 10, 20, 30, 50, 100]}
-        checkboxSelection
-        onCellClick={handleCellClick}
-        style={{
-          boxShadow: "2px 2px 8px rgba(0, 0, 0, 0.1)",
-          borderRadius: "10px",
+        pagination={{
+          defaultPageSize: 5,
+          pageSizeOptions: [1, 2, 3, 5, 10, 20, 30, 50, 100, 150, 200],
+          showSizeChanger: true,
+          showTotal: (total, range) => (
+            <span style={{ fontWeight: "600" }}>
+              {`${range[0]} - ${range[1]}  of  ${total}  items`}
+            </span>
+          ),
         }}
       />
 

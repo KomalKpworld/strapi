@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
-import { DataGrid } from "@mui/x-data-grid";
 import {
   Button as AntButton,
   Modal,
@@ -10,6 +9,7 @@ import {
   Row,
   Col,
   Select,
+  Table,
 } from "antd";
 import {
   DeleteOutlined,
@@ -52,12 +52,12 @@ const Product = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const initialColumns = [
-    { field: "id", headerName: "ID", width: 70 },
+    { dataIndex: "id", title: "ID", width: 70 },
     {
-      field: "category_name",
-      headerName: "Category Name",
-      width: 150,
-      renderCell: ({ row }) =>
+      title: "Category Name",
+      dataIndex: "category_name",
+      key: "category_name",
+      render: (text, row) =>
         row.category_id?.category_name ? (
           row.category_id?.category_name
         ) : (
@@ -65,34 +65,33 @@ const Product = () => {
         ),
     },
     {
-      field: "sub_category_name",
-      headerName: "Sub Category Name",
-      width: 150,
-      renderCell: ({ row }) =>
+      title: "Sub Category Name",
+      dataIndex: "sub_category_name",
+      key: "sub_category_name",
+      render: (text, row) =>
         row.sub_category_id?.sub_category_name ? (
           row.sub_category_id?.sub_category_name
         ) : (
           <span style={{ color: "green" }}>No Available</span>
         ),
     },
-    { field: "frame_type", headerName: "Frame Type", width: 80 },
     {
-      field: "image",
-      headerName: "image",
-      width: 150,
-      renderCell: (params) =>
-        params.row.image ? (
-          params.row.image
+      title: "Image",
+      dataIndex: "image",
+      key: "image",
+      render: (text, row) =>
+        row.image ? (
+          row.image
         ) : (
           <span style={{ color: "green" }}>No Available</span>
         ),
     },
     {
-      field: "file",
-      headerName: "File",
-      width: 150,
-      renderCell: (params) => {
-        const file = params.row.file ? params.row.file[0] : null;
+      title: "File",
+      dataIndex: "file",
+      key: "file",
+      render: (text, row) => {
+        const file = row.file ? row.file[0] : null;
         if (file) {
           return (
             <a href={file.url} target="_blank" rel="noopener noreferrer">
@@ -105,14 +104,14 @@ const Product = () => {
       },
     },
     {
-      field: "edit",
-      headerName: " ",
+      title: "",
+      key: "edit",
       width: 70,
-      renderCell: (params) => (
+      render: (text, row) => (
         <AntButton
           type="text"
           danger
-          onClick={() => handleEdit(params.row)}
+          onClick={() => handleEdit(row)}
           icon={<EditOutlined style={{ verticalAlign: "baseline" }} />}
           style={{
             color: "#25805b",
@@ -123,14 +122,14 @@ const Product = () => {
       ),
     },
     {
-      field: "delete",
-      headerName: " ",
+      title: "",
+      key: "delete",
       width: 70,
-      renderCell: (params) => (
+      render: (text, row) => (
         <AntButton
           type="text"
           danger
-          onClick={() => handleDelete(params.row)}
+          onClick={() => handleDelete(row)}
           icon={<DeleteOutlined style={{ verticalAlign: "baseline" }} />}
           style={{
             color: "#b34c4c",
@@ -703,8 +702,8 @@ const Product = () => {
           Create New Product
         </AntButton>
       </div>
-      <DataGrid
-        rows={data.filter((row) =>
+      <Table
+        dataSource={data.filter((row) =>
           Object.keys(row).some((key) =>
             key === "category_id" || key === "sub_category_id"
               ? row[key] &&
@@ -725,17 +724,14 @@ const Product = () => {
           )
         )}
         columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: { page: 0, pageSize: 5 },
-          },
+        pagination={{
+          defaultCurrent: 1,
+          defaultPageSize: 5,
+          pageSizeOptions: [2, 3, 5, 10, 20, 30, 50, 100],
         }}
-        pageSizeOptions={[2, 3, 5, 10, 20, 30, 50, 100]}
-        checkboxSelection
-        onCellClick={handleCellClick}
-        style={{
-          boxShadow: "2px 2px 8px rgba(0, 0, 0, 0.1)",
-          borderRadius: "10px",
+        rowSelection={{
+          type: "checkbox",
+          onChange: handleCellClick,
         }}
       />
 

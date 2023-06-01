@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Button } from "@mantine/core";
-import { useNavigate } from "react-router-dom";
-import { DataGrid } from "@mui/x-data-grid";
-import { Button as AntButton, Modal, Form, Input, Row, Col } from "antd";
+import { Button } from "@themesberg/react-bootstrap";
+import { Button as AntButton, Modal, Form, Input, Row, Col, Table } from "antd";
 import {
   DeleteOutlined,
   EditOutlined,
@@ -18,7 +16,6 @@ import {
 import BootstrapLoader from "../BootstrapLoader";
 
 const Category = () => {
-  const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -35,48 +32,44 @@ const Category = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedRecords, setSelectedRecords] = useState([]);
 
   const initialColumns = [
-    { field: "id", headerName: "ID", width: 100 },
     {
-      field: "category_name",
-      headerName: "category_name",
+      title: "No.",
+      dataIndex: "rowNumber",
+      width: 50,
+      key: "rowNumber",
+      render: (text, record, index) => index + 1, // Render the row number
+    },
+    { dataIndex: "id", title: "ID", width: 70 },
+    {
+      dataIndex: "category_name",
+      title: "category_name",
       width: 150,
-      renderCell: (params) =>
-        params.row.category_name ? (
-          params.row.category_name
-        ) : (
-          <span style={{ color: "green" }}>Empty</span>
-        ),
+      render: (text) =>
+        text ? text : <span style={{ color: "green" }}>Empty</span>,
     },
     {
-      field: "move",
-      headerName: "move",
+      dataIndex: "move",
+      title: "move",
       width: 70,
-      renderCell: (params) =>
-        params.row.move ? (
-          params.row.move
-        ) : (
-          <span style={{ color: "green" }}>Empty</span>
-        ),
+      render: (text) =>
+        text ? text : <span style={{ color: "green" }}>Empty</span>,
     },
     {
-      field: "category_image",
-      headerName: "category_image",
-      width: 250,
-      renderCell: (params) =>
-        params.row.category_image ? (
-          params.row.category_image
-        ) : (
-          <span style={{ color: "green" }}>No Available</span>
-        ),
+      dataIndex: "category_image",
+      title: "category_image",
+      width: 200,
+      render: (text) =>
+        text ? text : <span style={{ color: "green" }}>No Available</span>,
     },
     {
-      field: "file",
-      headerName: "File",
+      dataIndex: "file",
+      title: "File",
       width: 150,
-      renderCell: (params) => {
-        const file = params.row.file ? params.row.file[0] : null;
+      render: (text, record) => {
+        const file = record.file ? record.file[0] : null;
         if (file) {
           return (
             <a href={file.url} target="_blank" rel="noopener noreferrer">
@@ -88,16 +81,14 @@ const Category = () => {
         }
       },
     },
-
     {
-      field: "edit",
-      headerName: " ",
+      title: "Edit",
       width: 70,
-      renderCell: (params) => (
+      render: (text, record) => (
         <AntButton
           type="text"
           danger
-          onClick={() => handleEdit(params.row)}
+          onClick={() => handleEdit(record)}
           icon={<EditOutlined style={{ verticalAlign: "baseline" }} />}
           style={{
             color: "#25805b",
@@ -108,14 +99,13 @@ const Category = () => {
       ),
     },
     {
-      field: "delete",
-      headerName: " ",
+      title: "Delete",
       width: 70,
-      renderCell: (params) => (
+      render: (text, record) => (
         <AntButton
           type="text"
           danger
-          onClick={() => handleDelete(params.row)}
+          onClick={() => handleDelete(record)}
           icon={<DeleteOutlined style={{ verticalAlign: "baseline" }} />}
           style={{
             color: "#b34c4c",
@@ -145,15 +135,15 @@ const Category = () => {
     }
   };
 
-  const handleDelete = (row) => {
-    console.log("Select for Delete", row);
-    setDeleteFormData({ ...row });
+  const handleDelete = (record) => {
+    console.log("Select for Delete", record);
+    setDeleteFormData({ ...record });
     setIsDeleteModalOpen(true);
   };
 
-  const handleEdit = (row) => {
-    console.log("Select for Edit", row);
-    setEditFormData(row);
+  const handleEdit = (record) => {
+    console.log("Select for Edit", record);
+    setEditFormData(record);
     setIsEditModalOpen(true);
   };
 
@@ -310,11 +300,68 @@ const Category = () => {
     }
   };
 
-  const handleCellClick = (params) => {
-    const selectedRow = params.row;
-    console.log("Selected Row:", selectedRow);
-    setSelectedRows(selectedRow);
-    // Perform any additional actions with the selected row
+  const rowSelection = {
+    type: "checkbox",
+    selectedRowKeys: selectedRecords,
+    onChange: (selectedRows) => {
+      setSelectedRecords(selectedRows);
+    },
+  };
+
+  const pagination = {
+    defaultPageSize: 5,
+    pageSizeOptions: [1, 2, 3, 5, 10, 20, 30, 50, 100, 150, 200],
+    showSizeChanger: true,
+    showTotal: (total, range) => (
+      <span style={{ fontWeight: "600" }}>
+        {`${range[0]} - ${range[1]}  of  ${total}  items`}
+      </span>
+    ),
+  };
+
+  console.log(selectedRecords);
+
+  const deleteMultipleCategoryData = async (selectedRecords) => {
+    console.log(selectedRecords, "Delete");
+    try {
+      setIsLoading(true);
+
+      for (const id of selectedRecords) {
+        const success = await deleteCategoryData(id, token);
+        if (!success) {
+          console.log(`Failed to delete category with ID ${id}.`);
+          return;
+        }
+      }
+
+      setIsLoading(false);
+      setSelectedRecords([]);
+      setData((prevData) => {
+        return prevData.map((row) =>
+          selectedRecords.includes(row.id) ? { ...row, status: "deleted" } : row
+        );
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const filterData = (data, searchQuery) => {
+    return data.filter((row) =>
+      Object.keys(row).some((key) =>
+        key === "category_id"
+          ? row[key] &&
+            row[key]["category_name"] &&
+            row[key]["category_name"]
+              .toString()
+              .toLowerCase()
+              .includes(searchQuery.toLowerCase())
+          : row[key] &&
+            row[key]
+              .toString()
+              .toLowerCase()
+              .includes(searchQuery.toLowerCase())
+      )
+    );
   };
 
   return (
@@ -564,17 +611,10 @@ const Category = () => {
               )}
             </Col>
           </Row>
-
-          {/* <Form.Item>
-            <Button htmltype="submit">Create</Button>
-          </Form.Item>
-          <Form.Item>
-            <Button onClick={handleModalCancel}>Cancel</Button>
-          </Form.Item> */}
         </Form>
       </Modal>
       <div>
-        <div style={{ display: "flex", margin: "10px 0px" }}>
+        <div style={{ display: "flex", margin: "20px 0px" }}>
           <Input
             placeholder="Search..."
             value={searchQuery}
@@ -588,6 +628,27 @@ const Category = () => {
               padding: "5px 20px",
             }}
           />
+          <div style={{ margin: "0 auto" }}>
+            {selectedRecords?.length > 0 && (
+              <>
+                <Button
+                  type="text"
+                  danger
+                  disabled={isLoading}
+                  onClick={() => deleteMultipleCategoryData(selectedRecords)}
+                  style={{
+                    background: "#f6cccc",
+                    borderRadius: "15px",
+                    fontSize: "20px",
+                    color: "#b34c4c",
+                    padding: "10px 20px",
+                  }}
+                >
+                  Delete All {isLoading && <BootstrapLoader />}
+                </Button>
+              </>
+            )}
+          </div>
           <AntButton
             type="text"
             danger
@@ -610,35 +671,13 @@ const Category = () => {
           </AntButton>
         </div>
 
-        <DataGrid
-          rows={data.filter((row) =>
-            Object.keys(row).some(
-              (key) =>
-                row[key] &&
-                row[key]
-                  .toString()
-                  .toLowerCase()
-                  .includes(searchQuery.toLowerCase())
-            )
-          )}
+        <Table
+          rowKey="id"
+          rowSelection={rowSelection}
+          dataSource={filterData(data, searchQuery)}
           columns={columns}
-          initialState={{
-            pagination: {
-              paginationModel: { page: 0, pageSize: 5 },
-            },
-          }}
-          pageSizeOptions={[5, 10, 20, 30, 50, 100]}
-          checkboxSelection
-          onCellClick={handleCellClick}
-          style={{
-            boxShadow: "2px 2px 8px rgba(0, 0, 0, 0.1)",
-            borderRadius: "10px",
-          }}
+          pagination={pagination}
         />
-
-        <Button mt="xl" onClick={() => navigate("/homepage")}>
-          Go Back HomePage
-        </Button>
       </div>
     </main>
   );
