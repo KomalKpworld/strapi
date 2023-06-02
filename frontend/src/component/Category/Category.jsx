@@ -7,30 +7,31 @@ import {
   PlusOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
+
+import BootstrapLoader from "../BootstrapLoader";
 import {
   fetchCategoryData,
   createCategoryData,
   updateCategoryData,
   deleteCategoryData,
 } from "../../api";
-import BootstrapLoader from "../BootstrapLoader";
 
 const Category = () => {
-  const [data, setData] = useState([]);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [editFormData, setEditFormData] = useState({});
-  const [createFormData, setCreateFormData] = useState({});
-  const [deleteFormData, setDeleteFormData] = useState({});
-  const [files, setFiles] = useState([]);
-  const [fileNames, setFileNames] = useState([]);
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
   const token = localStorage.getItem("token");
-  const [searchQuery, setSearchQuery] = useState("");
-  // eslint-disable-next-line
-  const [selectedRows, setSelectedRows] = useState([]);
   const [form] = Form.useForm();
+
+  const [data, setData] = useState([]);
+
+  const [createFormData, setCreateFormData] = useState({});
+  const [editFormData, setEditFormData] = useState({});
+  const [deleteFormData, setDeleteFormData] = useState({});
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [files, setFiles] = useState([]);
+  const [fileNames, setFileNames] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [selectedRecords, setSelectedRecords] = useState([]);
 
@@ -116,6 +117,7 @@ const Category = () => {
       ),
     },
   ];
+
   // eslint-disable-next-line
   const [columns, setColumns] = useState(initialColumns);
 
@@ -133,41 +135,6 @@ const Category = () => {
     } catch (err) {
       console.log(err);
     }
-  };
-
-  const handleDelete = (record) => {
-    console.log("Select for Delete", record);
-    setDeleteFormData({ ...record });
-    setIsDeleteModalOpen(true);
-  };
-
-  const handleEdit = (record) => {
-    console.log("Select for Edit", record);
-    setEditFormData(record);
-    setIsEditModalOpen(true);
-  };
-
-  const handleModalCancel = () => {
-    form.resetFields();
-    setFileNames([]);
-    setCreateFormData({});
-    setEditFormData({});
-    setDeleteFormData({});
-    setIsEditModalOpen(false);
-    setIsCreateModalOpen(false);
-    setIsDeleteModalOpen(false);
-  };
-
-  const handleCreate = () => {
-    setCreateFormData({});
-    setIsCreateModalOpen(true);
-  };
-
-  const handleFileChange = (e) => {
-    const selectedFiles = Array.from(e.target.files);
-    setFiles(selectedFiles);
-    const fileNames = selectedFiles.map((file) => file.name);
-    setFileNames(fileNames);
   };
 
   const handleCreateForm = async (values, event) => {
@@ -199,47 +166,6 @@ const Category = () => {
         } else {
           console.log("Invalid currentUser object. Unable to create data.");
         }
-      }
-    } catch (err) {
-      console.log("Error:", err);
-      if (err.response) {
-        console.log("Error response:", err.response);
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleDeleteForm = async (values, event) => {
-    event.preventDefault();
-    setIsLoading(true);
-    try {
-      console.log("Form values:", values);
-
-      if (currentUser && currentUser.id) {
-        if (
-          values.created_by_user &&
-          values.created_by_user.id === currentUser.id
-        ) {
-          const success = await deleteCategoryData(values.id, token);
-
-          if (success) {
-            console.log("Deleting an entry");
-            setIsDeleteModalOpen(false);
-            setData((prevData) =>
-              prevData.filter((row) => row.id !== values.id)
-            );
-            form.resetFields();
-            setFileNames([]);
-            handleCategoryApi(searchQuery);
-          } else {
-            console.log("Failed to delete entry.");
-          }
-        } else {
-          console.log("User is not authorized to delete this data.");
-        }
-      } else {
-        console.log("Invalid currentUser object. Unable to delete data.");
       }
     } catch (err) {
       console.log("Error:", err);
@@ -300,26 +226,46 @@ const Category = () => {
     }
   };
 
-  const rowSelection = {
-    type: "checkbox",
-    selectedRowKeys: selectedRecords,
-    onChange: (selectedRows) => {
-      setSelectedRecords(selectedRows);
-    },
-  };
+  const handleDeleteForm = async (values, event) => {
+    event.preventDefault();
+    setIsLoading(true);
+    try {
+      console.log("Form values:", values);
 
-  const pagination = {
-    defaultPageSize: 5,
-    pageSizeOptions: [1, 2, 3, 5, 10, 20, 30, 50, 100, 150, 200],
-    showSizeChanger: true,
-    showTotal: (total, range) => (
-      <span style={{ fontWeight: "600" }}>
-        {`${range[0]} - ${range[1]}  of  ${total}  items`}
-      </span>
-    ),
-  };
+      if (currentUser && currentUser.id) {
+        if (
+          values.created_by_user &&
+          values.created_by_user.id === currentUser.id
+        ) {
+          const success = await deleteCategoryData(values.id, token);
 
-  console.log(selectedRecords);
+          if (success) {
+            console.log("Deleting an entry");
+            setIsDeleteModalOpen(false);
+            setData((prevData) =>
+              prevData.filter((row) => row.id !== values.id)
+            );
+            form.resetFields();
+            setFileNames([]);
+            handleCategoryApi(searchQuery);
+          } else {
+            console.log("Failed to delete entry.");
+          }
+        } else {
+          console.log("User is not authorized to delete this data.");
+        }
+      } else {
+        console.log("Invalid currentUser object. Unable to delete data.");
+      }
+    } catch (err) {
+      console.log("Error:", err);
+      if (err.response) {
+        console.log("Error response:", err.response);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const deleteMultipleCategoryData = async (selectedRecords) => {
     console.log(selectedRecords, "Delete");
@@ -328,6 +274,7 @@ const Category = () => {
 
       for (const id of selectedRecords) {
         const success = await deleteCategoryData(id, token);
+        handleCategoryApi(searchQuery);
         if (!success) {
           console.log(`Failed to delete category with ID ${id}.`);
           return;
@@ -345,6 +292,42 @@ const Category = () => {
       console.log(err);
     }
   };
+
+  const handleCreate = () => {
+    setCreateFormData({});
+    setIsCreateModalOpen(true);
+  };
+
+  const handleEdit = (record) => {
+    console.log("Select for Edit", record);
+    setEditFormData(record);
+    setIsEditModalOpen(true);
+  };
+
+  const handleDelete = (record) => {
+    console.log("Select for Delete", record);
+    setDeleteFormData({ ...record });
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleModalCancel = () => {
+    form.resetFields();
+    setFileNames([]);
+    setCreateFormData({});
+    setEditFormData({});
+    setDeleteFormData({});
+    setIsEditModalOpen(false);
+    setIsCreateModalOpen(false);
+    setIsDeleteModalOpen(false);
+  };
+
+  const handleFileChange = (e) => {
+    const selectedFiles = Array.from(e.target.files);
+    setFiles(selectedFiles);
+    const fileNames = selectedFiles.map((file) => file.name);
+    setFileNames(fileNames);
+  };
+
   const filterData = (data, searchQuery) => {
     return data.filter((row) =>
       Object.keys(row).some((key) =>
@@ -362,6 +345,25 @@ const Category = () => {
               .includes(searchQuery.toLowerCase())
       )
     );
+  };
+
+  const rowSelection = {
+    type: "checkbox",
+    selectedRowKeys: selectedRecords,
+    onChange: (selectedRows) => {
+      setSelectedRecords(selectedRows);
+    },
+  };
+
+  const pagination = {
+    defaultPageSize: 5,
+    pageSizeOptions: [1, 2, 3, 5, 10, 20, 30, 50, 100, 150, 200],
+    showSizeChanger: true,
+    showTotal: (total, range) => (
+      <span style={{ fontWeight: "600" }}>
+        {`${range[0]} - ${range[1]}  of  ${total}  items`}
+      </span>
+    ),
   };
 
   return (
@@ -613,72 +615,77 @@ const Category = () => {
           </Row>
         </Form>
       </Modal>
-      <div>
-        <div style={{ display: "flex", margin: "20px 0px" }}>
-          <Input
-            placeholder="Search..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            suffix={<SearchOutlined />}
-            style={{
-              width: 200,
-              backgroundColor: "#fff",
-              border: "2px solid #e6e6e6",
-              borderRadius: "15px",
-              padding: "5px 20px",
-            }}
-          />
-          <div style={{ margin: "0 auto" }}>
-            {selectedRecords?.length > 0 && (
-              <>
-                <Button
-                  type="text"
-                  danger
-                  disabled={isLoading}
-                  onClick={() => deleteMultipleCategoryData(selectedRecords)}
-                  style={{
-                    background: "#f6cccc",
-                    borderRadius: "15px",
-                    fontSize: "20px",
-                    color: "#b34c4c",
-                    padding: "10px 20px",
-                  }}
-                >
-                  Delete All {isLoading && <BootstrapLoader />}
-                </Button>
-              </>
-            )}
-          </div>
-          <AntButton
-            type="text"
-            danger
-            onClick={handleCreate}
-            icon={<PlusOutlined />}
-            style={{
-              color: "#5250e6",
-              backgroundColor: "#f0f0ff",
-              border: "1px solid #ddddfe",
-              height: "auto",
-              padding: "10px 20px",
-              borderRadius: "15px",
-              display: "flex",
-              alignItems: "center",
-              marginLeft: "auto",
-              fontWeight: "700",
-            }}
-          >
-            Create New Category
-          </AntButton>
-        </div>
 
-        <Table
-          rowKey="id"
-          rowSelection={rowSelection}
-          dataSource={filterData(data, searchQuery)}
-          columns={columns}
-          pagination={pagination}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          margin: "10px 0px",
+        }}
+      >
+        <Input
+          placeholder="Search..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          suffix={<SearchOutlined />}
+          style={{
+            width: 200,
+            backgroundColor: "#fff",
+            border: "2px solid #e6e6e6",
+            borderRadius: "15px",
+            padding: "10px 20px",
+          }}
         />
+
+        {selectedRecords?.length > 0 && (
+          <>
+            <Button
+              type="text"
+              danger
+              disabled={isLoading}
+              onClick={() => deleteMultipleCategoryData(selectedRecords)}
+              style={{
+                color: "#b34c4c",
+                background: "#f6cccc",
+                borderRadius: "15px",
+                border: "1px solid #b34c4c",
+                fontWeight: "600",
+                padding: "10px 30px",
+              }}
+            >
+              Delete All {isLoading && <BootstrapLoader />}
+            </Button>
+          </>
+        )}
+
+        <AntButton
+          type="text"
+          danger
+          onClick={handleCreate}
+          icon={<PlusOutlined />}
+          style={{
+            color: "#5250e6",
+            backgroundColor: "#f0f0ff",
+            border: "1px solid #ddddfe",
+            height: "auto",
+            padding: "10px 20px",
+            borderRadius: "15px",
+            display: "flex",
+            alignItems: "center",
+            fontWeight: "700",
+          }}
+        >
+          Create New Product
+        </AntButton>
       </div>
+
+      <Table
+        rowKey="id"
+        rowSelection={rowSelection}
+        dataSource={filterData(data, searchQuery)}
+        columns={columns}
+        pagination={pagination}
+      />
     </main>
   );
 };
