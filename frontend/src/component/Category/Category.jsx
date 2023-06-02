@@ -675,7 +675,7 @@ const Category = () => {
             fontWeight: "700",
           }}
         >
-          Create New Product
+          Create New Category
         </AntButton>
       </div>
 
