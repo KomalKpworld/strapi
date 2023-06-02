@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button } from "@mantine/core";
-import { useNavigate } from "react-router-dom";
+import { Button } from "@themesberg/react-bootstrap";
 import {
   Button as AntButton,
   Modal,
@@ -18,6 +17,7 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 
+import BootstrapLoader from "../BootstrapLoader";
 import {
   fetchProductData,
   fetchCategoriesName,
@@ -26,40 +26,46 @@ import {
   updateProductData,
   deleteProductData,
 } from "../../api";
-import BootstrapLoader from "../BootstrapLoader";
 
 const Product = () => {
-  const navigate = useNavigate();
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const token = localStorage.getItem("token");
+  const [form] = Form.useForm();
+
   const [data, setData] = useState([]);
   const [categoriesName, setCategoriesName] = useState([]);
   const [subCategoriesName, setSubCategoriesName] = useState([]);
 
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [editFormData, setEditFormData] = useState({});
-  const [selectedValue, setSelectedValue] = useState("");
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [createFormData, setCreateFormData] = useState({});
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [editFormData, setEditFormData] = useState({});
   const [deleteFormData, setDeleteFormData] = useState({});
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedValue, setSelectedValue] = useState("");
   const [files, setFiles] = useState([]);
   const [fileNames, setFileNames] = useState([]);
-  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-  const token = localStorage.getItem("token");
   const [searchQuery, setSearchQuery] = useState("");
-  // eslint-disable-next-line
-  const [selectedRows, setSelectedRows] = useState([]);
-  const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedRecords, setSelectedRecords] = useState([]);
 
   const initialColumns = [
+    {
+      title: "No.",
+      dataIndex: "rowNumber",
+      width: 50,
+      key: "rowNumber",
+      render: (text, record, index) => index + 1,
+    },
     { dataIndex: "id", title: "ID", width: 70 },
     {
       title: "Category Name",
       dataIndex: "category_name",
       key: "category_name",
-      render: (text, row) =>
-        row.category_id?.category_name ? (
-          row.category_id?.category_name
+      width: 70,
+      render: (text, record) =>
+        record.category_id?.category_name ? (
+          record.category_id?.category_name
         ) : (
           <span style={{ color: "green" }}>No Available</span>
         ),
@@ -68,30 +74,43 @@ const Product = () => {
       title: "Sub Category Name",
       dataIndex: "sub_category_name",
       key: "sub_category_name",
-      render: (text, row) =>
-        row.sub_category_id?.sub_category_name ? (
-          row.sub_category_id?.sub_category_name
+      width: 70,
+      render: (text, record) =>
+        record.sub_category_id?.sub_category_name ? (
+          record.sub_category_id?.sub_category_name
         ) : (
           <span style={{ color: "green" }}>No Available</span>
+        ),
+    },
+    {
+      title: "frame_type",
+      dataIndex: "frame_type",
+      width: 70,
+      render: (text, record) =>
+        record.frame_type ? (
+          record.frame_type
+        ) : (
+          <span style={{ color: "green" }}>Empty</span>
         ),
     },
     {
       title: "Image",
       dataIndex: "image",
       key: "image",
-      render: (text, row) =>
-        row.image ? (
-          row.image
+      width: 70,
+      render: (text, record) =>
+        record.image ? (
+          record.image
         ) : (
           <span style={{ color: "green" }}>No Available</span>
         ),
     },
     {
-      title: "File",
       dataIndex: "file",
-      key: "file",
-      render: (text, row) => {
-        const file = row.file ? row.file[0] : null;
+      title: "File",
+      width: 70,
+      render: (text, record) => {
+        const file = record.file ? record.file[0] : null;
         if (file) {
           return (
             <a href={file.url} target="_blank" rel="noopener noreferrer">
@@ -107,11 +126,11 @@ const Product = () => {
       title: "",
       key: "edit",
       width: 70,
-      render: (text, row) => (
+      render: (text, record) => (
         <AntButton
           type="text"
           danger
-          onClick={() => handleEdit(row)}
+          onClick={() => handleEdit(record)}
           icon={<EditOutlined style={{ verticalAlign: "baseline" }} />}
           style={{
             color: "#25805b",
@@ -125,11 +144,11 @@ const Product = () => {
       title: "",
       key: "delete",
       width: 70,
-      render: (text, row) => (
+      render: (text, record) => (
         <AntButton
           type="text"
           danger
-          onClick={() => handleDelete(row)}
+          onClick={() => handleDelete(record)}
           icon={<DeleteOutlined style={{ verticalAlign: "baseline" }} />}
           style={{
             color: "#b34c4c",
@@ -149,13 +168,13 @@ const Product = () => {
     // eslint-disable-next-line
   }, []);
 
-  const fetchDataSubCategoryName = async (selectedValue) => {
+  const handleCategoryApi = async (searchQuery = "") => {
     try {
-      const data = await fetchSubCategoriesName(selectedValue);
-      setSubCategoriesName(data);
-      console.log(data, "Subname");
-    } catch (error) {
-      console.error("Error fetching sub-categories:", error);
+      const data = await fetchProductData(searchQuery);
+      setData(data);
+      console.log(data, "data");
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -169,43 +188,55 @@ const Product = () => {
     }
   };
 
-  const handleCategoryApi = async (searchQuery = "") => {
+  const fetchDataSubCategoryName = async (selectedValue) => {
     try {
-      const data = await fetchProductData(searchQuery);
-      setData(data);
-      console.log(data, "data");
-    } catch (err) {
-      console.log(err);
+      const data = await fetchSubCategoriesName(selectedValue);
+      setSubCategoriesName(data);
+      console.log(data, "Subname");
+    } catch (error) {
+      console.error("Error fetching sub-categories:", error);
     }
   };
 
-  const handleSelectChange = (value) => {
-    console.log("Selected value:", value);
-    setSelectedValue(value);
-    fetchDataSubCategoryName(value);
-  };
+  const handleCreateForm = async (values, event) => {
+    event.preventDefault();
+    setIsLoading(true);
+    try {
+      console.log("Form values After Create:", values);
 
-  const handleDelete = (row) => {
-    console.log("Select for Delete", row);
-    setDeleteFormData({ ...row });
-    setIsDeleteModalOpen(true);
-  };
+      if (isCreateModalOpen) {
+        if (currentUser && currentUser.id) {
+          const formData = new FormData();
+          formData.append("category_id", values.category_id);
+          formData.append("sub_category_id", values.sub_category_id);
+          formData.append("frame_type", values.frame_type);
+          for (let i = 0; i < files.length; i++) {
+            formData.append("file", files[i]);
+          }
 
-  const handleModalCancel = () => {
-    form.resetFields();
-    setFileNames([]);
-    setCreateFormData({});
-    setEditFormData({});
-    setDeleteFormData({});
-    setIsEditModalOpen(false);
-    setIsCreateModalOpen(false);
-    setIsDeleteModalOpen(false);
-  };
+          const success = await createProductData(formData, token);
 
-  const handleEdit = (row) => {
-    console.log("Select for Edit", row);
-    setEditFormData(row);
-    setIsEditModalOpen(true);
+          if (success) {
+            console.log("Creating Successfull");
+            setIsCreateModalOpen(false);
+            form.resetFields();
+            setFileNames([]);
+            handleCategoryApi(searchQuery);
+          } else {
+            console.log("Failed to create entry");
+          }
+        } else {
+          console.log("Invalid currentUser object. Unable to create data.");
+        }
+      }
+    } catch (err) {
+      console.log("Error:", err);
+      if (err.response) {
+        console.log("Error response:", err.response);
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleEditForm = async (values, event) => {
@@ -259,47 +290,6 @@ const Product = () => {
     }
   };
 
-  const handleCreateForm = async (values, event) => {
-    event.preventDefault();
-    setIsLoading(true);
-    try {
-      console.log("Form values After Create:", values);
-
-      if (isCreateModalOpen) {
-        if (currentUser && currentUser.id) {
-          const formData = new FormData();
-          formData.append("category_id", values.category_id);
-          formData.append("sub_category_id", values.sub_category_id);
-          formData.append("frame_type", values.frame_type);
-          for (let i = 0; i < files.length; i++) {
-            formData.append("file", files[i]);
-          }
-
-          const success = await createProductData(formData, token);
-
-          if (success) {
-            console.log("Creating Successfull");
-            setIsCreateModalOpen(false);
-            form.resetFields();
-            setFileNames([]);
-            handleCategoryApi(searchQuery);
-          } else {
-            console.log("Failed to create entry");
-          }
-        } else {
-          console.log("Invalid currentUser object. Unable to create data.");
-        }
-      }
-    } catch (err) {
-      console.log("Error:", err);
-      if (err.response) {
-        console.log("Error response:", err.response);
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const handleDeleteForm = async (values, event) => {
     event.preventDefault();
     setIsLoading(true);
@@ -340,14 +330,58 @@ const Product = () => {
     }
   };
 
-  const handleChange = (value) => {
-    // Handle the change event here
-    console.log(value);
+  const deleteMultipleCategoryData = async (selectedRecords) => {
+    console.log(selectedRecords, "Delete");
+    try {
+      setIsLoading(true);
+
+      for (const id of selectedRecords) {
+        const success = await deleteProductData(id, token);
+        handleCategoryApi(searchQuery);
+        if (!success) {
+          console.log(`Failed to delete category with ID ${id}.`);
+          return;
+        }
+      }
+
+      setIsLoading(false);
+      setSelectedRecords([]);
+      setData((prevData) => {
+        return prevData.map((row) =>
+          selectedRecords.includes(row.id) ? { ...row, status: "deleted" } : row
+        );
+      });
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const handleCreate = () => {
     setCreateFormData({});
     setIsCreateModalOpen(true);
+  };
+
+  const handleEdit = (record) => {
+    console.log("Select for Edit", record);
+    setEditFormData(record);
+    setIsEditModalOpen(true);
+  };
+
+  const handleDelete = (record) => {
+    console.log("Select for Delete", record);
+    setDeleteFormData({ ...record });
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleModalCancel = () => {
+    form.resetFields();
+    setFileNames([]);
+    setCreateFormData({});
+    setEditFormData({});
+    setDeleteFormData({});
+    setIsEditModalOpen(false);
+    setIsCreateModalOpen(false);
+    setIsDeleteModalOpen(false);
   };
 
   const handleFileChange = (e) => {
@@ -356,12 +390,54 @@ const Product = () => {
     const fileNames = selectedFiles.map((file) => file.name);
     setFileNames(fileNames);
   };
+  
+  const handleSelectChange = (value) => {
+    console.log("Selected value:", value);
+    setSelectedValue(value);
+    fetchDataSubCategoryName(value);
+  };
 
-  const handleCellClick = (params) => {
-    const selectedRow = params.row;
-    console.log("Selected Row:", selectedRow);
-    setSelectedRows(selectedRow);
-    // Perform any additional actions with the selected row
+  const handleChange = (value) => {
+    // Handle the change event here
+    console.log(value);
+  };
+
+  const filterData = (data, searchQuery) => {
+    return data.filter((row) =>
+      Object.keys(row).some((key) =>
+        key === "category_id"
+          ? row[key] &&
+            row[key]["category_name"] &&
+            row[key]["category_name"]
+              .toString()
+              .toLowerCase()
+              .includes(searchQuery.toLowerCase())
+          : row[key] &&
+            row[key]
+              .toString()
+              .toLowerCase()
+              .includes(searchQuery.toLowerCase())
+      )
+    );
+  };
+
+  const rowSelection = {
+    type: "checkbox",
+    selectedRowKeys: selectedRecords,
+    onChange: (selectedRows) => {
+      setSelectedRecords(selectedRows);
+    },
+  };
+
+  const pagination = {
+    defaultPageSize: 5,
+    pageSizeOptions: [1, 2, 3, 5, 10, 20, 30, 50, 100, 150, 200],
+    showSizeChanger: true,
+    showTotal: (total, range) => (
+      <span style={{ fontWeight: "600" }}>
+        {`${range[0]} - ${range[1]}  of  ${total}  items`}
+      </span>
+    ),
   };
 
   return (
@@ -667,7 +743,13 @@ const Product = () => {
         </Form>
       </Modal>
 
-      <div style={{ display: "flex", margin: "10px 0px" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          margin: "10px 0px",
+        }}
+      >
         <Input
           placeholder="Search..."
           value={searchQuery}
@@ -681,6 +763,28 @@ const Product = () => {
             padding: "10px 20px",
           }}
         />
+
+        {selectedRecords?.length > 0 && (
+          <>
+            <Button
+              type="text"
+              danger
+              disabled={isLoading}
+              onClick={() => deleteMultipleCategoryData(selectedRecords)}
+              style={{
+                color: "#b34c4c",
+                background: "#f6cccc",
+                borderRadius: "15px",
+                border: "1px solid #b34c4c",
+                fontWeight: "600",
+                padding: "10px 30px",
+              }}
+            >
+              Delete All {isLoading && <BootstrapLoader />}
+            </Button>
+          </>
+        )}
+
         <AntButton
           type="text"
           danger
@@ -695,49 +799,20 @@ const Product = () => {
             borderRadius: "15px",
             display: "flex",
             alignItems: "center",
-            marginLeft: "auto",
             fontWeight: "700",
           }}
         >
           Create New Product
         </AntButton>
       </div>
-      <Table
-        dataSource={data.filter((row) =>
-          Object.keys(row).some((key) =>
-            key === "category_id" || key === "sub_category_id"
-              ? row[key] &&
-                row[key][
-                  key === "category_id" ? "category_name" : "sub_category_name"
-                ] &&
-                row[key][
-                  key === "category_id" ? "category_name" : "sub_category_name"
-                ]
-                  .toString()
-                  .toLowerCase()
-                  .includes(searchQuery.toLowerCase())
-              : row[key] &&
-                row[key]
-                  .toString()
-                  .toLowerCase()
-                  .includes(searchQuery.toLowerCase())
-          )
-        )}
-        columns={columns}
-        pagination={{
-          defaultCurrent: 1,
-          defaultPageSize: 5,
-          pageSizeOptions: [2, 3, 5, 10, 20, 30, 50, 100],
-        }}
-        rowSelection={{
-          type: "checkbox",
-          onChange: handleCellClick,
-        }}
-      />
 
-      <Button mt="xl" onClick={() => navigate("/homepage")}>
-        Go Back HomePage
-      </Button>
+      <Table
+        rowKey="id"
+        rowSelection={rowSelection}
+        dataSource={filterData(data, searchQuery)}
+        columns={columns}
+        pagination={pagination}
+      />
     </main>
   );
 };
