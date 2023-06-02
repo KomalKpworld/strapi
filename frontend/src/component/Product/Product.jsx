@@ -57,12 +57,21 @@ const Product = () => {
       key: "rowNumber",
       render: (text, record, index) => index + 1,
     },
-    { dataIndex: "id", title: "ID", width: 70 },
+    {
+      title: "ID",
+      dataIndex: "id",
+      width: 70,
+      sorter: (a, b) => a.id - b.id,
+    },
     {
       title: "Category Name",
       dataIndex: "category_name",
       key: "category_name",
       width: 70,
+      sorter: (a, b) =>
+        (a.category_id?.category_name || "").localeCompare(
+          b.category_id?.category_name || ""
+        ),
       render: (text, record) =>
         record.category_id?.category_name ? (
           record.category_id?.category_name
@@ -75,6 +84,10 @@ const Product = () => {
       dataIndex: "sub_category_name",
       key: "sub_category_name",
       width: 70,
+      sorter: (a, b) =>
+        (a.sub_category_id?.sub_category_name || "").localeCompare(
+          b.sub_category_id?.sub_category_name || ""
+        ),
       render: (text, record) =>
         record.sub_category_id?.sub_category_name ? (
           record.sub_category_id?.sub_category_name
@@ -86,6 +99,7 @@ const Product = () => {
       title: "frame_type",
       dataIndex: "frame_type",
       width: 70,
+      sorter: (a, b) => (a.frame_type || "").localeCompare(b.frame_type || ""),
       render: (text, record) =>
         record.frame_type ? (
           record.frame_type
@@ -98,6 +112,7 @@ const Product = () => {
       dataIndex: "image",
       key: "image",
       width: 70,
+      sorter: (a, b) => (a.image || "").localeCompare(b.image || ""),
       render: (text, record) =>
         record.image ? (
           record.image
@@ -109,6 +124,10 @@ const Product = () => {
       dataIndex: "file",
       title: "File",
       width: 70,
+      sorter: (a, b) =>
+        a.file && b.file
+          ? (a.file[0]?.name || "").localeCompare(b.file[0]?.name || "")
+          : 0,
       render: (text, record) => {
         const file = record.file ? record.file[0] : null;
         if (file) {
@@ -123,7 +142,7 @@ const Product = () => {
       },
     },
     {
-      title: "",
+      title: "Edit",
       key: "edit",
       width: 70,
       render: (text, record) => (
@@ -141,7 +160,7 @@ const Product = () => {
       ),
     },
     {
-      title: "",
+      title: "Delete",
       key: "delete",
       width: 70,
       render: (text, record) => (
@@ -390,7 +409,7 @@ const Product = () => {
     const fileNames = selectedFiles.map((file) => file.name);
     setFileNames(fileNames);
   };
-  
+
   const handleSelectChange = (value) => {
     console.log("Selected value:", value);
     setSelectedValue(value);

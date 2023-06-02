@@ -41,13 +41,20 @@ const Category = () => {
       dataIndex: "rowNumber",
       width: 50,
       key: "rowNumber",
-      render: (text, record, index) => index + 1, // Render the row number
+      render: (text, record, index) => index + 1,
     },
-    { dataIndex: "id", title: "ID", width: 70 },
+    {
+      dataIndex: "id",
+      title: "ID",
+      width: 70,
+      sorter: (a, b) => a.id - b.id,
+    },
     {
       dataIndex: "category_name",
       title: "category_name",
       width: 150,
+      sorter: (a, b) =>
+        (a.category_name || "").localeCompare(b.category_name || ""),
       render: (text) =>
         text ? text : <span style={{ color: "green" }}>Empty</span>,
     },
@@ -55,6 +62,7 @@ const Category = () => {
       dataIndex: "move",
       title: "move",
       width: 70,
+      sorter: (a, b) => (a.move || "").localeCompare(b.move || ""),
       render: (text) =>
         text ? text : <span style={{ color: "green" }}>Empty</span>,
     },
@@ -62,6 +70,8 @@ const Category = () => {
       dataIndex: "category_image",
       title: "category_image",
       width: 200,
+      sorter: (a, b) =>
+        (a.category_image || "").localeCompare(b.category_image || ""),
       render: (text) =>
         text ? text : <span style={{ color: "green" }}>No Available</span>,
     },
@@ -69,6 +79,10 @@ const Category = () => {
       dataIndex: "file",
       title: "File",
       width: 150,
+      sorter: (a, b) =>
+        a.file && b.file
+          ? (a.file[0]?.name || "").localeCompare(b.file[0]?.name || "")
+          : 0,
       render: (text, record) => {
         const file = record.file ? record.file[0] : null;
         if (file) {

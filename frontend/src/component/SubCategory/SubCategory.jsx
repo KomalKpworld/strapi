@@ -61,11 +61,14 @@ const SubCategory = () => {
       title: "ID",
       dataIndex: "id",
       width: 50,
+      sorter: (a, b) => a.id - b.id,
     },
     {
       title: "Sub Category Name",
       dataIndex: "sub_category_name",
       width: 70,
+      sorter: (a, b) =>
+        (a.sub_category_name || "").localeCompare(b.sub_category_name || ""),
       render: (text, record) =>
         record.sub_category_name ? (
           record.sub_category_name
@@ -77,6 +80,10 @@ const SubCategory = () => {
       title: "Category Name",
       dataIndex: "category_name",
       width: 70,
+      sorter: (a, b) =>
+        (a.category_id?.category_name || "").localeCompare(
+          b.category_id?.category_name || ""
+        ),
       render: (text, record) =>
         record.category_id?.category_name ? (
           record.category_id.category_name
@@ -88,6 +95,7 @@ const SubCategory = () => {
       title: "Status",
       dataIndex: "status",
       width: 50,
+      sorter: (a, b) => (a.status || "").localeCompare(b.status || ""),
       render: (text, record) =>
         record.status ? (
           record.status
@@ -99,6 +107,7 @@ const SubCategory = () => {
       title: "Move",
       dataIndex: "move",
       width: 50,
+      sorter: (a, b) => (a.move || "").localeCompare(b.move || ""),
       render: (text, record) =>
         record.move ? (
           record.move
@@ -110,6 +119,11 @@ const SubCategory = () => {
       title: "Is New",
       dataIndex: "is_new",
       width: 50,
+      sorter: (a, b) => {
+        const aValue = a.is_new ? a.is_new.toString() : "";
+        const bValue = b.is_new ? b.is_new.toString() : "";
+        return aValue.localeCompare(bValue);
+      },
       render: (text, record) =>
         record.is_new ? (
           record.is_new.toString()
@@ -121,6 +135,8 @@ const SubCategory = () => {
       title: "Display Date",
       dataIndex: "display_date",
       width: 50,
+      sorter: (a, b) =>
+        (a.display_date || "").localeCompare(b.display_date || ""),
       render: (text, record) =>
         record.display_date ? (
           record.display_date
@@ -132,6 +148,7 @@ const SubCategory = () => {
       title: "Slider",
       dataIndex: "slider",
       width: 50,
+      sorter: (a, b) => (a.slider || "").localeCompare(b.slider || ""),
       render: (text, record) =>
         record.slider ? (
           record.slider
@@ -143,6 +160,7 @@ const SubCategory = () => {
       title: "URL",
       dataIndex: "url",
       width: 50,
+      sorter: (a, b) => (a.url || "").localeCompare(b.url || ""),
       render: (text, record) =>
         record.url ? record.url : <span style={{ color: "green" }}>Empty</span>,
     },
@@ -150,6 +168,8 @@ const SubCategory = () => {
       title: "Sub Category Image",
       dataIndex: "sub_category_image",
       width: 100,
+      sorter: (a, b) =>
+        (a.sub_category_image || "").localeCompare(b.sub_category_image || ""),
       render: (text, record) =>
         record.sub_category_image ? (
           record.sub_category_image
@@ -161,6 +181,10 @@ const SubCategory = () => {
       title: "File",
       dataIndex: "file",
       width: 70,
+      sorter: (a, b) =>
+        a.file && b.file
+          ? (a.file[0]?.name || "").localeCompare(b.file[0]?.name || "")
+          : 0,
       render: (text, record) => {
         const file = record.file ? record.file[0] : null;
         if (file) {
