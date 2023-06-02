@@ -26,24 +26,22 @@ code {
   border-bottom: 2px solid #e9ebef !important;
   color: #9198a2 !important;
 }
-/* ant-table-pagination.css */
-.ant-table-pagination.ant-pagination {
-  position: absolute !important;
-  right: 0.5% !important;
-  bottom: 100% !important;
-}
+
 .ant-table {
-  margin: 50px 0px !important;
+  margin: 20px 0px !important;
   background: transparent !important;
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1) !important;
   border-radius: 15px !important;
 }
+
 .ant-table-container table > tbody > tr:last-child td:last-child {
   border-bottom-right-radius: 15px !important;
 }
+
 .ant-table-container table > tbody > tr:last-child td:first-child {
   border-bottom-left-radius: 15px !important;
 }
+
 .ant-table-thead > tr > th,
 .ant-table-tbody > tr > td {
   word-break: break-word;

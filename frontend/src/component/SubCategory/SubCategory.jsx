@@ -49,7 +49,7 @@ const SubCategory = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedRecords, setSelectedRecords] = useState([]);
 
-  const initialColumns = [
+  const columns = [
     {
       title: "No.",
       dataIndex: "rowNumber",
@@ -235,9 +235,6 @@ const SubCategory = () => {
       ),
     },
   ];
-
-  // eslint-disable-next-line
-  const [columns, setColumns] = useState(initialColumns);
 
   useEffect(() => {
     fetchDataCategoryName();
@@ -1016,7 +1013,15 @@ const SubCategory = () => {
         rowSelection={rowSelection}
         dataSource={filterData(data, searchQuery)}
         columns={columns}
-        pagination={pagination}
+        pagination={{
+          ...pagination,
+          position: ["topRight"],
+        }}
+        title={() => (
+          <h5 style={{ textAlign: "center", color: "#2876d2" }}>
+            <b>Sub-Category Data Table</b>
+          </h5>
+        )}
       />
     </main>
   );

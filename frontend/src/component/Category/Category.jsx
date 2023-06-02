@@ -35,7 +35,7 @@ const Category = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedRecords, setSelectedRecords] = useState([]);
 
-  const initialColumns = [
+  const columns = [
     {
       title: "No.",
       dataIndex: "rowNumber",
@@ -131,9 +131,6 @@ const Category = () => {
       ),
     },
   ];
-
-  // eslint-disable-next-line
-  const [columns, setColumns] = useState(initialColumns);
 
   useEffect(() => {
     handleCategoryApi();
@@ -698,7 +695,15 @@ const Category = () => {
         rowSelection={rowSelection}
         dataSource={filterData(data, searchQuery)}
         columns={columns}
-        pagination={pagination}
+        pagination={{
+          ...pagination,
+          position: ["topRight"],
+        }}
+        title={() => (
+          <h5 style={{ textAlign: "center", color: "#2876d2" }}>
+            <b>Category Data Table</b>
+          </h5>
+        )}
       />
     </main>
   );

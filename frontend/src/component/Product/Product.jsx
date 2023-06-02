@@ -49,7 +49,7 @@ const Product = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedRecords, setSelectedRecords] = useState([]);
 
-  const initialColumns = [
+  const columns = [
     {
       title: "No.",
       dataIndex: "rowNumber",
@@ -178,8 +178,6 @@ const Product = () => {
       ),
     },
   ];
-  // eslint-disable-next-line
-  const [columns, setColumns] = useState(initialColumns);
 
   useEffect(() => {
     fetchDataCategoryName();
@@ -830,7 +828,15 @@ const Product = () => {
         rowSelection={rowSelection}
         dataSource={filterData(data, searchQuery)}
         columns={columns}
-        pagination={pagination}
+        pagination={{
+          ...pagination,
+          position: ["topRight"],
+        }}
+        title={() => (
+          <h5 style={{ textAlign: "center", color: "#2876d2" }}>
+            <b>Product Data Table</b>
+          </h5>
+        )}
       />
     </main>
   );
