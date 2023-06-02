@@ -97,11 +97,9 @@ module.exports = createCoreController('api::product.product', ({ strapi }) => ({
     async delete(ctx) {
         try {
             const id = ctx.request.params.id
-            const deleteFile = await deleteProductFile(id)
-            for (let i = 0; i < result.rows.length; i++) {
+            const deleteFile = await deleteProductFile(id)      
                 let query = `DELETE FROM products WHERE id= ${result.rows[i].productid}`
-                let data = await strapi.db.connection.raw(query)
-            }
+                let data = await strapi.db.connection.raw(query)         
             return 'data deleted successfully'
         } catch (error) {
             return error
