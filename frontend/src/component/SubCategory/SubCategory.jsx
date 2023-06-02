@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button } from "@mantine/core";
-import { useNavigate } from "react-router-dom";
+import { Button } from "@themesberg/react-bootstrap";
 import {
   Button as AntButton,
   Modal,
@@ -18,6 +17,8 @@ import {
   PlusOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
+
+import BootstrapLoader from "../BootstrapLoader";
 import {
   fetchSubCategoryData,
   fetchCategoriesName,
@@ -25,28 +26,26 @@ import {
   updateSubCategoryData,
   deleteSubCategoryData,
 } from "../../api";
-import BootstrapLoader from "../BootstrapLoader";
 
 const SubCategory = () => {
-  const navigate = useNavigate();
-  const [data, setData] = useState([]);
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [createFormData, setCreateFormData] = useState({});
-  const [categoriesName, setCategoriesName] = useState([]);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [editFormData, setEditFormData] = useState({});
-  const [selectedValue, setSelectedValue] = useState("");
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [deleteFormData, setDeleteFormData] = useState({});
-  const [files, setFiles] = useState([]);
-  const [fileNames, setFileNames] = useState([]);
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
   const token = localStorage.getItem("token");
+  const [form] = Form.useForm();
+
+  const [data, setData] = useState([]);
+  const [categoriesName, setCategoriesName] = useState([]);
+
+  const [createFormData, setCreateFormData] = useState({});
+  const [editFormData, setEditFormData] = useState({});
+  const [deleteFormData, setDeleteFormData] = useState({});
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedValue, setSelectedValue] = useState("");
+  const [files, setFiles] = useState([]);
+  const [fileNames, setFileNames] = useState([]);
   const [isNew, setIsNew] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  // eslint-disable-next-line
-  const [selectedRows, setSelectedRows] = useState([]);
-  const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(false);
   const [selectedRecords, setSelectedRecords] = useState([]);
 
@@ -216,8 +215,6 @@ const SubCategory = () => {
   // eslint-disable-next-line
   const [columns, setColumns] = useState(initialColumns);
 
-  // JSX code...
-
   useEffect(() => {
     fetchDataCategoryName();
     handleCategoryApi();
@@ -234,21 +231,14 @@ const SubCategory = () => {
     }
   };
 
-  const handleDelete = (record) => {
-    console.log("Select for Delete", record);
-    setDeleteFormData({ ...record });
-    setIsDeleteModalOpen(true);
-  };
-
-  const handleEdit = (record) => {
-    console.log("Select for Edit", record);
-    setEditFormData(record);
-    setIsEditModalOpen(true);
-  };
-
-  const handleCreate = () => {
-    setCreateFormData({});
-    setIsCreateModalOpen(true);
+  const fetchDataCategoryName = async () => {
+    try {
+      const data = await fetchCategoriesName();
+      setCategoriesName(data);
+      console.log(data, "name");
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
   };
 
   const handleCreateForm = async (values, event) => {
@@ -357,32 +347,6 @@ const SubCategory = () => {
     }
   };
 
-  const handleModalCancel = () => {
-    form.resetFields();
-    setFileNames([]);
-    setCreateFormData({});
-    setEditFormData({});
-    setDeleteFormData({});
-    setIsCreateModalOpen(false);
-    setIsEditModalOpen(false);
-    setIsDeleteModalOpen(false);
-  };
-
-  const fetchDataCategoryName = async () => {
-    try {
-      const data = await fetchCategoriesName();
-      setCategoriesName(data);
-      console.log(data, "name");
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-    }
-  };
-
-  const handleSelectChange = (value) => {
-    console.log("Selected value:", value);
-    setSelectedValue(value);
-  };
-
   const handleDeleteForm = async (values, event) => {
     event.preventDefault();
     setIsLoading(true);
@@ -423,6 +387,60 @@ const SubCategory = () => {
     }
   };
 
+  const deleteMultipleCategoryData = async (selectedRecords) => {
+    console.log(selectedRecords, "Delete");
+    try {
+      setIsLoading(true);
+
+      for (const id of selectedRecords) {
+        const success = await deleteSubCategoryData(id, token);
+        handleCategoryApi(searchQuery);
+        if (!success) {
+          console.log(`Failed to delete category with ID ${id}.`);
+          return;
+        }
+      }
+
+      setIsLoading(false);
+      setSelectedRecords([]);
+      setData((prevData) => {
+        return prevData.map((row) =>
+          selectedRecords.includes(row.id) ? { ...row, status: "deleted" } : row
+        );
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleCreate = () => {
+    setCreateFormData({});
+    setIsCreateModalOpen(true);
+  };
+
+  const handleEdit = (record) => {
+    console.log("Select for Edit", record);
+    setEditFormData(record);
+    setIsEditModalOpen(true);
+  };
+
+  const handleDelete = (record) => {
+    console.log("Select for Delete", record);
+    setDeleteFormData({ ...record });
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleModalCancel = () => {
+    form.resetFields();
+    setFileNames([]);
+    setCreateFormData({});
+    setEditFormData({});
+    setDeleteFormData({});
+    setIsCreateModalOpen(false);
+    setIsEditModalOpen(false);
+    setIsDeleteModalOpen(false);
+  };
+
   const handleFileChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
     setFiles(selectedFiles);
@@ -430,9 +448,33 @@ const SubCategory = () => {
     setFileNames(fileNames);
   };
 
+  const handleSelectChange = (value) => {
+    console.log("Selected value:", value);
+    setSelectedValue(value);
+  };
+
   const handleIsNewChange = (value) => {
     console.log(value, "IsNew");
     setIsNew(value);
+  };
+
+  const filterData = (data, searchQuery) => {
+    return data.filter((row) =>
+      Object.keys(row).some((key) =>
+        key === "category_id"
+          ? row[key] &&
+            row[key]["category_name"] &&
+            row[key]["category_name"]
+              .toString()
+              .toLowerCase()
+              .includes(searchQuery.toLowerCase())
+          : row[key] &&
+            row[key]
+              .toString()
+              .toLowerCase()
+              .includes(searchQuery.toLowerCase())
+      )
+    );
   };
 
   const rowSelection = {
@@ -441,6 +483,17 @@ const SubCategory = () => {
     onChange: (selectedRows) => {
       setSelectedRecords(selectedRows);
     },
+  };
+
+  const pagination = {
+    defaultPageSize: 5,
+    pageSizeOptions: [1, 2, 3, 5, 10, 20, 30, 50, 100, 150, 200],
+    showSizeChanger: true,
+    showTotal: (total, range) => (
+      <span style={{ fontWeight: "600" }}>
+        {`${range[0]} - ${range[1]}  of  ${total}  items`}
+      </span>
+    ),
   };
 
   return (
@@ -640,6 +693,7 @@ const SubCategory = () => {
           </Row>
         </Form>
       </Modal>
+
       {/* EditModal */}
       <Modal
         title="Update Modal"
@@ -807,6 +861,7 @@ const SubCategory = () => {
           </Row>
         </Form>
       </Modal>
+
       {/* DeleteModal */}
       <Modal
         title="Delete Modal"
@@ -868,7 +923,14 @@ const SubCategory = () => {
           </Row>
         </Form>
       </Modal>
-      <div style={{ display: "flex", margin: "10px 0px" }}>
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          margin: "10px 0px",
+        }}
+      >
         <Input
           placeholder="Search..."
           value={searchQuery}
@@ -882,6 +944,28 @@ const SubCategory = () => {
             padding: "10px 20px",
           }}
         />
+
+        {selectedRecords?.length > 0 && (
+          <>
+            <Button
+              type="text"
+              danger
+              disabled={isLoading}
+              onClick={() => deleteMultipleCategoryData(selectedRecords)}
+              style={{
+                color: "#b34c4c",
+                background: "#f6cccc",
+                borderRadius: "15px",
+                border: "1px solid #b34c4c",
+                fontWeight: "600",
+                padding: "10px 30px",
+              }}
+            >
+              Delete All {isLoading && <BootstrapLoader />}
+            </Button>
+          </>
+        )}
+
         <AntButton
           type="text"
           danger
@@ -896,7 +980,6 @@ const SubCategory = () => {
             borderRadius: "15px",
             display: "flex",
             alignItems: "center",
-            marginLeft: "auto",
             fontWeight: "700",
           }}
         >
@@ -907,38 +990,10 @@ const SubCategory = () => {
       <Table
         rowKey="id"
         rowSelection={rowSelection}
-        dataSource={data.filter((row) =>
-          Object.keys(row).some((key) =>
-            key === "category_id"
-              ? row[key] &&
-                row[key]["category_name"] &&
-                row[key]["category_name"]
-                  .toString()
-                  .toLowerCase()
-                  .includes(searchQuery.toLowerCase())
-              : row[key] &&
-                row[key]
-                  .toString()
-                  .toLowerCase()
-                  .includes(searchQuery.toLowerCase())
-          )
-        )}
+        dataSource={filterData(data, searchQuery)}
         columns={columns}
-        pagination={{
-          defaultPageSize: 5,
-          pageSizeOptions: [1, 2, 3, 5, 10, 20, 30, 50, 100, 150, 200],
-          showSizeChanger: true,
-          showTotal: (total, range) => (
-            <span style={{ fontWeight: "600" }}>
-              {`${range[0]} - ${range[1]}  of  ${total}  items`}
-            </span>
-          ),
-        }}
+        pagination={pagination}
       />
-
-      <Button mt="xl" onClick={() => navigate("/homepage")}>
-        Go Back HomePage
-      </Button>
     </main>
   );
 };
