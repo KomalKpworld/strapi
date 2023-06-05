@@ -510,6 +510,7 @@ const SubCategory = () => {
     defaultPageSize: 5,
     pageSizeOptions: [1, 2, 3, 5, 10, 20, 30, 50, 100, 150, 200],
     showSizeChanger: true,
+    locale: { items_per_page: "" },
     showTotal: (total, range) => (
       <span style={{ fontWeight: "600" }}>
         {`${range[0]} - ${range[1]}  of  ${total}  items`}

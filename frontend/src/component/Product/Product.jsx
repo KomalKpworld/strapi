@@ -422,10 +422,14 @@ const Product = () => {
   const filterData = (data, searchQuery) => {
     return data.filter((row) =>
       Object.keys(row).some((key) =>
-        key === "category_id"
+        key === "category_id" || key === "sub_category_id"
           ? row[key] &&
-            row[key]["category_name"] &&
-            row[key]["category_name"]
+            row[key][
+              key === "category_id" ? "category_name" : "sub_category_name"
+            ] &&
+            row[key][
+              key === "category_id" ? "category_name" : "sub_category_name"
+            ]
               .toString()
               .toLowerCase()
               .includes(searchQuery.toLowerCase())
@@ -450,6 +454,7 @@ const Product = () => {
     defaultPageSize: 5,
     pageSizeOptions: [1, 2, 3, 5, 10, 20, 30, 50, 100, 150, 200],
     showSizeChanger: true,
+    locale: { items_per_page: "" },
     showTotal: (total, range) => (
       <span style={{ fontWeight: "600" }}>
         {`${range[0]} - ${range[1]}  of  ${total}  items`}
