@@ -22,13 +22,13 @@ const Users = () => {
     {
       dataIndex: "id",
       title: "ID",
-      width: 70,
+      width: 50,
       sorter: (a, b) => a.id - b.id,
     },
     {
       dataIndex: "username",
       title: "Username",
-      width: 150,
+      width: 100,
       sorter: (a, b) => (a.username || "").localeCompare(b.username || ""),
       render: (text) =>
         text ? text : <span style={{ color: "green" }}>Empty</span>,
@@ -36,7 +36,7 @@ const Users = () => {
     {
       dataIndex: "email",
       title: "Email",
-      width: 200,
+      width: 100,
       sorter: (a, b) => (a.email || "").localeCompare(b.email || ""),
       render: (text) =>
         text ? text : <span style={{ color: "green" }}>Empty</span>,
@@ -44,7 +44,7 @@ const Users = () => {
     {
       dataIndex: "confirmed",
       title: "Confirmed",
-      width: 150,
+      width: 70,
       sorter: (a, b) =>
         (a.confirmed || "")
           .toString()
@@ -54,7 +54,7 @@ const Users = () => {
     {
       dataIndex: "blocked",
       title: "Blocked",
-      width: 150,
+      width: 70,
       sorter: (a, b) =>
         (a.blocked || "")
           .toString()
@@ -64,8 +64,16 @@ const Users = () => {
     {
       dataIndex: "createdAt",
       title: "Created At",
-      width: 150,
+      width: 100,
       sorter: (a, b) => (a.createdAt || "").localeCompare(b.createdAt || ""),
+      render: (text) =>
+        text ? text : <span style={{ color: "green" }}>Empty</span>,
+    },
+    {
+      dataIndex: "updatedAt",
+      title: "UpdatedAt",
+      width: 100,
+      sorter: (a, b) => (a.updatedAt || "").localeCompare(b.updatedAt || ""),
       render: (text) =>
         text ? text : <span style={{ color: "green" }}>Empty</span>,
     },

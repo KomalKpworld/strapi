@@ -9,6 +9,8 @@ import {
   Navbar,
   Product,
   Users,
+  Welcome,
+  Profile,
 } from "./index";
 import useStyles from "./styles";
 import { CssBaseline } from "@mui/material";
@@ -24,6 +26,7 @@ const HomeApp = ({ onLogout }) => {
           <div className={classes.toolbar} />
 
           <Routes>
+            <Route exact path="/" element={<Welcome />}></Route>
             <Route exact path="/homepage" element={<HomePage />}></Route>
             <Route exact path="/category" element={<Category />}></Route>
             <Route exact path="/subcategory" element={<SubCategory />}></Route>
@@ -34,6 +37,7 @@ const HomeApp = ({ onLogout }) => {
             ></Route>
             <Route exact path="/product" element={<Product />}></Route>
             <Route exact path="/users" element={<Users />}></Route>
+            <Route exact path="/Profile" element={<Profile />}></Route>
           </Routes>
         </main>
       </div>

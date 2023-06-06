@@ -2,10 +2,15 @@ import { makeStyles } from "@mui/styles";
 
 const drawerWidth = 250;
 export default makeStyles((theme) => ({
+  profile: {
+    display: "flex",
+    alignItems: "center",
+    cursor: "pointer",
+  },
   toolbar: {
     height: "80px",
     display: " flex",
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
     marginLeft: "240px",
     [theme.breakpoints.down("sm")]: {

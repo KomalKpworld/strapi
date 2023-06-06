@@ -302,3 +302,47 @@ export async function fetchUsersData(token) {
     return [];
   }
 }
+
+// LoginUser API
+export async function loginUser(data) {
+  try {
+    const response = await fetch(`${BASE_URL}/api/auth/local`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (response.ok) {
+      const responseData = await response.json();
+      return responseData;
+    } else {
+      const errorData = await response.json();
+      throw new Error(JSON.stringify(errorData));
+    }
+  } catch (error) {
+    throw new Error("An error occurred during login");
+  }
+}
+
+// CreateUser API
+export async function createUser(data) {
+  try {
+    const response = await fetch(`${BASE_URL}/api/users`, {
+      method: "POST",
+      body: data,
+    });
+
+    if (response.ok) {
+      const responseData = await response.json();
+      return responseData;
+    } else {
+      const errorData = await response.json();
+      throw new Error(JSON.stringify(errorData));
+    }
+  } catch (error) {
+    throw new Error("An error occurred while creating the user");
+  }
+}
+

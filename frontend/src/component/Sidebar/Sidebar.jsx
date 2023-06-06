@@ -16,6 +16,9 @@ const Sidebar = ({ onLogout }) => {
     <main>
       <List>
         <ListSubheader>COLLECTION TYPES</ListSubheader>
+        <ListItem onClick={() => navigate("/")} button className="listItem">
+          <ListItemText>Welcome</ListItemText>
+        </ListItem>
         <ListItem
           onClick={() => navigate("/homepage")}
           button
@@ -50,6 +53,13 @@ const Sidebar = ({ onLogout }) => {
           className="listItem"
         >
           <ListItemText>Users</ListItemText>
+        </ListItem>
+        <ListItem
+          onClick={() => navigate("/profile")}
+          button
+          className="listItem"
+        >
+          <ListItemText>User Info</ListItemText>
         </ListItem>
         <div style={{ height: "200px" }} />
         <ListItem

@@ -13,63 +13,84 @@ import {
   Modal,
 } from "@mantine/core";
 import { BrowserRouter } from "react-router-dom";
+import BootstrapLoader from "../BootstrapLoader";
 import HomeApp from "../HomeApp";
+import { loginUser, createUser } from "../../api";
 
 const Login = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [confirmed, setConfirmed] = useState(true);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
 
   useEffect(() => {
     const loggedIn = localStorage.getItem("isLoggedIn") === "true";
     setIsLoggedIn(loggedIn);
+
+    const storedEmail = localStorage.getItem("rememberedEmail");
+    const storedPassword = localStorage.getItem("rememberedPassword");
+
+    if (storedEmail && storedPassword) {
+      setEmail(storedEmail);
+      setPassword(storedPassword);
+      setRememberMe(true);
+    }
   }, []);
+
+  useEffect(() => {
+    if (rememberMe) {
+      localStorage.setItem("rememberedEmail", email);
+      localStorage.setItem("rememberedPassword", password);
+    } else {
+      localStorage.removeItem("rememberedEmail");
+      localStorage.removeItem("rememberedPassword");
+    }
+  }, [rememberMe, email, password]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setIsLoading(true);
 
-    const username = event.target.username.value;
+    const email = event.target.email.value;
     const password = event.target.password.value;
 
-    const data = {
-      identifier: username,
-      password: password,
-    };
-
     try {
-      const response = await fetch("http://localhost:1337/api/auth/local", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      const data = {
+        identifier: email,
+        password: password,
+      };
+      console.log(data);
+      const responseData = await loginUser(data);
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Login successful");
-        console.log(JSON.stringify(data));
-        localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("token", data.jwt);
-        localStorage.setItem("currentUser", JSON.stringify(data.user));
+      console.log("Login successful");
+      console.log(JSON.stringify(responseData));
+      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("token", responseData.jwt);
+      localStorage.setItem("currentUser", JSON.stringify(responseData.user));
+      localStorage.setItem("currentPassword", data.password);
+      localStorage.setItem("currentIdentifier", data.identifier);
 
-        setIsLoggedIn(true);
-      } else {
-        const errorData = await response.json();
-        console.log("Login failed");
-        console.log(JSON.stringify(errorData));
-      }
+      setIsLoggedIn(true);
     } catch (error) {
-      console.log("An error occurred during login");
+      console.log("Login failed");
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
     localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("currentUser");
     localStorage.removeItem("token");
-    localStorage.clear();
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("currentPassword");
+    localStorage.removeItem("currentIdentifier");
   };
 
   if (isLoggedIn) {
@@ -82,41 +103,31 @@ const Login = () => {
 
   const handleModalSubmit = async (event) => {
     event.preventDefault();
-
+    setIsLoading(true);
     const username = event.target.username.value;
     const email = event.target.email.value;
     const password = event.target.password.value;
     const role = event.target.role.value;
 
-    const data = new FormData();
-    data.append("username", username);
-    data.append("email", email);
-    data.append("password", password);
-    data.append("role", role);
-
-    // Log the form data
-    for (const [key, value] of data.entries()) {
-      console.log(`${key}: ${value}`);
-    }
-
     try {
-      const response = await fetch("http://localhost:1337/api/users", {
-        method: "POST",
-        body: data,
-      });
+      setConfirmed(true);
+      const data = new FormData();
+      data.append("username", username);
+      data.append("email", email);
+      data.append("password", password);
+      data.append("role", role);
+      data.append("confirmed", confirmed);
 
-      if (response.ok) {
-        const responseData = await response.json();
-        console.log(JSON.stringify(responseData));
-        // Handle success
-      } else {
-        const errorData = await response.json();
-        console.log(JSON.stringify(errorData));
-        // Handle error
+      for (const [key, value] of data.entries()) {
+        console.log(`${key}: ${value}`);
       }
+
+      const responseData = await createUser(data);
+      console.log(JSON.stringify(responseData));
     } catch (error) {
-      console.log(error);
-      // Handle error
+      console.log(JSON.stringify(error));
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -126,6 +137,21 @@ const Login = () => {
 
   const handleModalClose = () => {
     setIsModalOpen(false);
+    setShowModal(false);
+  };
+
+  const handleForgotPasswordClick = () => {
+    setShowModal(true);
+  };
+
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
+  };
+
+  const handleEmailSubmit = (event) => {
+    event.preventDefault();
+    console.log("Reset password for email:", email);
+    handleModalClose();
   };
 
   return (
@@ -150,26 +176,39 @@ const Login = () => {
         <Paper withBorder shadow="md" p={30} mt={30} radius="md">
           <form onSubmit={handleSubmit}>
             <TextInput
-              name="username"
+              name="email"
               label="Email"
               placeholder="you@mantine.dev"
+              onChange={(e) => setEmail(e.target.value)}
+              value={email}
               required
             />
             <PasswordInput
               name="password"
               label="Password"
               placeholder="Your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               required
               mt="md"
             />
             <Group position="apart" mt="lg">
-              <Checkbox label="Remember me" />
-              <Anchor component="button" size="sm">
+              <Checkbox
+                label="Remember me"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+              />
+              <Anchor
+                component="button"
+                size="sm"
+                onClick={handleForgotPasswordClick}
+              >
                 Forgot password?
               </Anchor>
             </Group>
-            <Button fullWidth mt="xl" type="submit">
+            <Button fullWidth mt="xl" disabled={isLoading} type="submit">
               Login
+              {isLoading && <BootstrapLoader />}
             </Button>
           </form>
         </Paper>
@@ -182,23 +221,94 @@ const Login = () => {
         size="sm"
       >
         <form onSubmit={handleModalSubmit}>
-          <TextInput name="username" label="Username" required />
-          <TextInput name="email" type="email" label="Email" required />
+          <TextInput
+            name="username"
+            label="Username"
+            placeholder="Enter Your Username"
+            required
+          />
+          <TextInput
+            name="email"
+            type="email"
+            label="Email"
+            placeholder="Enter Your Email e.g. : you@mantine.dev"
+            required
+          />
           <TextInput
             name="password"
             type="password"
             label="Password"
+            placeholder="Enter Your Password Use Special Character"
             required
           />
-          <TextInput name="role" type="role" label="role" required />
+          <TextInput
+            name="role"
+            type="role"
+            label="role"
+            placeholder="Enter 1"
+            required
+          />
+          <TextInput
+            name="confirmed"
+            type="confirmed"
+            label="confirmed"
+            value={confirmed}
+            disabled
+          />
           <br />
 
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
             <Button type="button" onClick={handleModalClose} variant="outline">
               Cancel
             </Button>
-            <Button type="submit" style={{ marginLeft: "8px" }}>
+            <Button
+              type="submit"
+              disabled={isLoading}
+              style={{ marginLeft: "8px" }}
+            >
               Create Account
+              {isLoading && <BootstrapLoader />}
+            </Button>
+          </div>
+        </form>
+      </Modal>
+
+      <Modal
+        title="Forgot password"
+        opened={showModal}
+        onClose={handleModalClose}
+        size="sm"
+      >
+        <form onSubmit={handleEmailSubmit}>
+          <TextInput
+            placeholder="e.g. you@mantine.dev"
+            name="email"
+            label="Email"
+            value={email}
+            onChange={handleEmailChange}
+            required
+          />
+          <TextInput
+            placeholder="Set New Password"
+            name="password"
+            label="New Password"
+            // value={email}
+            onChange={handleEmailChange}
+            required
+          />
+
+          <br />
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <Button type="button" onClick={handleModalClose} variant="outline">
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              disabled={isLoading}
+              style={{ marginLeft: "8px" }}
+            >
+              Submit
+              {isLoading && <BootstrapLoader />}
             </Button>
           </div>
         </form>
