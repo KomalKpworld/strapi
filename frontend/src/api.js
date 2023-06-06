@@ -286,3 +286,19 @@ export async function deleteCategoryData(id, token) {
     return false;
   }
 }
+
+// UsersData API
+export async function fetchUsersData(token) {
+  try {
+    const res = await fetch(`${BASE_URL}/api/users`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    console.log(err);
+    return [];
+  }
+}

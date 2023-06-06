@@ -8,6 +8,7 @@ import {
   Sidebar,
   Navbar,
   Product,
+  Users,
 } from "./index";
 import useStyles from "./styles";
 import { CssBaseline } from "@mui/material";
@@ -32,6 +33,7 @@ const HomeApp = ({ onLogout }) => {
               element={<Sidebar onLogout={onLogout} />}
             ></Route>
             <Route exact path="/product" element={<Product />}></Route>
+            <Route exact path="/users" element={<Users />}></Route>
           </Routes>
         </main>
       </div>

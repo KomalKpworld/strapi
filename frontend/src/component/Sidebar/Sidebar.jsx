@@ -44,6 +44,13 @@ const Sidebar = ({ onLogout }) => {
         >
           <ListItemText>Product</ListItemText>
         </ListItem>
+        <ListItem
+          onClick={() => navigate("/users")}
+          button
+          className="listItem"
+        >
+          <ListItemText>Users</ListItemText>
+        </ListItem>
         <div style={{ height: "200px" }} />
         <ListItem
           onClick={handleLogout}
