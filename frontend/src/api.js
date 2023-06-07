@@ -346,3 +346,29 @@ export async function createUser(data) {
   }
 }
 
+//ChangePassword
+export async function changeUserPassword(formData, token) {
+  try {
+    const response = await fetch(`${BASE_URL}/api/auth/change-password`, {
+      method: "POST",
+      body: formData,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (response.ok) {
+      const newData = await response.json();
+      return newData;
+    } else {
+      console.log("Failed to changeUserPassword");
+      return null;
+    }
+  } catch (err) {
+    console.log("Error:", err);
+    if (err.response) {
+      console.log("Error response:", err.response);
+    }
+    return null;
+  }
+}

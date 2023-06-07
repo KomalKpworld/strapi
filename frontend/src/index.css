@@ -57,3 +57,7 @@ code {
 .ant-pagination-item-active a {
   color: #1890ff !important;
 }
+
+.ant-message-top {
+  top: 100px !important;
+}
