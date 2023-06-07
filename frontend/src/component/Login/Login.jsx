@@ -15,13 +15,19 @@ import {
 import { BrowserRouter } from "react-router-dom";
 import BootstrapLoader from "../BootstrapLoader";
 import HomeApp from "../HomeApp";
-import { loginUser, createUser } from "../../api";
+import {
+  loginUser,
+  createUser,
+  forgotUserPassword,
+  resetUserPassword,
+} from "../../api";
 
 const Login = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [resetPasswordModalOpen, setResetPasswordModalOpen] = useState(false);
 
   const [confirmed, setConfirmed] = useState(true);
   const [email, setEmail] = useState("");
@@ -124,6 +130,7 @@ const Login = () => {
 
       const responseData = await createUser(data);
       console.log(JSON.stringify(responseData));
+      setIsModalOpen(false);
     } catch (error) {
       console.log(JSON.stringify(error));
     } finally {
@@ -144,14 +151,64 @@ const Login = () => {
     setShowModal(true);
   };
 
-  const handleEmailChange = (event) => {
-    setEmail(event.target.value);
+  const handleEmailSubmit = async (event) => {
+    event.preventDefault();
+    setIsLoading(true);
+    const email = event.target.email.value;
+
+    try {
+      const formData = new FormData();
+      formData.append("email", email);
+
+      for (const [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`);
+      }
+
+      const responseData = await forgotUserPassword(formData);
+
+      console.log(responseData, "..responseData");
+      if (responseData && responseData.ok) {
+        // If the response is successful, show the reset password modal
+        setResetPasswordModalOpen(true);
+        setShowModal(false);
+      } else {
+        console.log("Failed to send reset password email");
+      }
+    } catch (error) {
+      console.log(JSON.stringify(error));
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleEmailSubmit = (event) => {
+  const handleResetPasswordSubmit = async (event) => {
     event.preventDefault();
-    console.log("Reset password for email:", email);
-    handleModalClose();
+
+    setIsLoading(true);
+
+    const password = event.target.password.value;
+    const passwordConfirmation = event.target.passwordConfirmation.value;
+    const code = event.target.code.value;
+
+    try {
+      const formData = new FormData();
+      formData.append("code", code);
+      formData.append("password", password);
+      formData.append("passwordConfirmation", passwordConfirmation);
+
+      const response = await resetUserPassword(formData);
+
+      if (response && response.ok) {
+        console.log("Password reset successful");
+        setResetPasswordModalOpen(false);
+      } else {
+        console.log("Failed to reset password");
+      }
+    } catch (error) {
+      console.log("Error:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -281,19 +338,10 @@ const Login = () => {
       >
         <form onSubmit={handleEmailSubmit}>
           <TextInput
-            placeholder="e.g. you@mantine.dev"
             name="email"
+            type="email"
             label="Email"
-            value={email}
-            onChange={handleEmailChange}
-            required
-          />
-          <TextInput
-            placeholder="Set New Password"
-            name="password"
-            label="New Password"
-            // value={email}
-            onChange={handleEmailChange}
+            placeholder="Enter Your Email e.g. : you@mantine.dev"
             required
           />
 
@@ -313,6 +361,56 @@ const Login = () => {
           </div>
         </form>
       </Modal>
+
+      {resetPasswordModalOpen && (
+        <Modal
+          title="Reset Password"
+          opened={resetPasswordModalOpen}
+          onClose={() => setResetPasswordModalOpen(false)}
+          size="sm"
+        >
+          <form onSubmit={handleResetPasswordSubmit}>
+            <TextInput
+              name="code"
+              label="Code"
+              placeholder="Enter Your Code"
+              required
+            />
+            <TextInput
+              name="password"
+              label="Password"
+              type="password"
+              placeholder="Enter Your New Password"
+              required
+            />
+            <TextInput
+              name="passwordConfirmation"
+              label="Confirm Password"
+              type="password"
+              placeholder="Confirm Your New Password"
+              required
+            />
+            <br />
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <Button
+                type="button"
+                onClick={() => setResetPasswordModalOpen(false)}
+                variant="outline"
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                disabled={isLoading}
+                style={{ marginLeft: "8px" }}
+              >
+                Submit
+                {isLoading && <BootstrapLoader />}
+              </Button>
+            </div>
+          </form>
+        </Modal>
+      )}
     </>
   );
 };

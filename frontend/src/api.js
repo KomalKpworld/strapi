@@ -372,3 +372,51 @@ export async function changeUserPassword(formData, token) {
     return null;
   }
 }
+
+//ForgotPassword
+export async function forgotUserPassword(formData) {
+  try {
+    const response = await fetch(`${BASE_URL}/api/auth/forgot-password`, {
+      method: "POST",
+      body: formData,
+    });
+
+    if (response.ok) {
+      const newData = await response.json();
+      return newData;
+    } else {
+      console.log("Failed to forgotUserPassword");
+      return null;
+    }
+  } catch (err) {
+    console.log("Error:", err);
+    if (err.response) {
+      console.log("Error response:", err.response);
+    }
+    return null;
+  }
+}
+
+//ResetPassword
+export async function resetUserPassword(formData) {
+  try {
+    const response = await fetch(`${BASE_URL}/api/auth/reset-password`, {
+      method: "POST",
+      body: formData,
+    });
+
+    if (response.ok) {
+      const newData = await response.json();
+      return newData;
+    } else {
+      console.log("Failed to ResetUserPassword");
+      return null;
+    }
+  } catch (err) {
+    console.log("Error:", err);
+    if (err.response) {
+      console.log("Error response:", err.response);
+    }
+    return null;
+  }
+}
