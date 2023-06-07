@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@themesberg/react-bootstrap";
-import { Button as AntButton, Modal, Form, Input, Row, Col, Table } from "antd";
+import {
+  Button as AntButton,
+  Modal,
+  Form,
+  Input,
+  Row,
+  Col,
+  Table,
+  message,
+} from "antd";
 import {
   DeleteOutlined,
   EditOutlined,
@@ -167,15 +176,24 @@ const Category = () => {
 
           if (success) {
             console.log("Creating a new entry");
+            message.success("Creating a new entry", {
+              duration: 2,
+            });
             setIsCreateModalOpen(false);
             form.resetFields();
             setFileNames([]);
             handleCategoryApi(searchQuery);
           } else {
             console.log("Failed to create entry");
+            message.error("Failed to create entry", {
+              duration: 2,
+            });
           }
         } else {
           console.log("Invalid currentUser object. Unable to create data.");
+          message.error("Invalid currentUser object. Unable to create data.", {
+            duration: 2,
+          });
         }
       }
     } catch (err) {
