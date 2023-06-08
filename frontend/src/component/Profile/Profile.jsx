@@ -225,7 +225,7 @@ const Profile = () => {
                   { required: true, message: "Please enter a currentPassword" },
                 ]}
               >
-                <Input />
+                <Input.Password />
               </Form.Item>
             </Col>
             <Col span={24}>
@@ -236,7 +236,7 @@ const Profile = () => {
                   { required: true, message: "Please enter a New Password" },
                 ]}
               >
-                <Input />
+                <Input.Password />
               </Form.Item>
             </Col>
             <Col span={24}>
@@ -250,7 +250,7 @@ const Profile = () => {
                   },
                 ]}
               >
-                <Input />
+                <Input.Password />
               </Form.Item>
             </Col>
           </Row>

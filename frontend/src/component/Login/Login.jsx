@@ -20,6 +20,7 @@ import {
   createUser,
   forgotUserPassword,
   resetUserPassword,
+  getUserData,
 } from "../../api";
 import { message } from "antd";
 
@@ -59,7 +60,7 @@ const Login = () => {
     }
   }, [rememberMe, email, password]);
 
-  const handleSubmit = async (event) => {
+  const handleLoginSubmit = async (event) => {
     event.preventDefault();
     setIsLoading(true);
 
@@ -71,11 +72,14 @@ const Login = () => {
         identifier: email,
         password: password,
       };
+
       console.log(data);
+
       const responseData = await loginUser(data);
 
       console.log("Login successful");
-      console.log(JSON.stringify(responseData));
+      message.success("Login successful");
+
       localStorage.setItem("isLoggedIn", "true");
       localStorage.setItem("token", responseData.jwt);
       localStorage.setItem("currentUser", JSON.stringify(responseData.user));
@@ -83,8 +87,17 @@ const Login = () => {
       localStorage.setItem("currentIdentifier", data.identifier);
 
       setIsLoggedIn(true);
+
+      const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+      const userId = currentUser.id;
+      const token = localStorage.getItem("token");
+
+      const userData = await getUserData(userId, token);
+
+      localStorage.setItem("currentUserInformation", JSON.stringify(userData));
     } catch (error) {
       console.log("Login failed");
+      message.error("Login failed");
       console.log(error);
     } finally {
       setIsLoading(false);
@@ -98,6 +111,7 @@ const Login = () => {
     localStorage.removeItem("currentUser");
     localStorage.removeItem("currentPassword");
     localStorage.removeItem("currentIdentifier");
+    localStorage.removeItem("currentUserInformation");
   };
 
   if (isLoggedIn) {
@@ -108,7 +122,7 @@ const Login = () => {
     );
   }
 
-  const handleModalSubmit = async (event) => {
+  const handleCreateSubmit = async (event) => {
     event.preventDefault();
     setIsLoading(true);
     const username = event.target.username.value;
@@ -237,7 +251,7 @@ const Login = () => {
         </Text>
 
         <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleLoginSubmit}>
             <TextInput
               name="email"
               label="Email"
@@ -283,7 +297,7 @@ const Login = () => {
         title="Create an Account"
         size="sm"
       >
-        <form onSubmit={handleModalSubmit}>
+        <form onSubmit={handleCreateSubmit}>
           <TextInput
             name="username"
             label="Username"
@@ -297,7 +311,7 @@ const Login = () => {
             placeholder="Enter Your Email e.g. : you@mantine.dev"
             required
           />
-          <TextInput
+          <PasswordInput
             name="password"
             type="password"
             label="Password"
@@ -382,14 +396,14 @@ const Login = () => {
               placeholder="Enter Your Code"
               required
             />
-            <TextInput
+            <PasswordInput
               name="password"
               label="Password"
               type="password"
               placeholder="Enter Your New Password"
               required
             />
-            <TextInput
+            <PasswordInput
               name="passwordConfirmation"
               label="Confirm Password"
               type="password"

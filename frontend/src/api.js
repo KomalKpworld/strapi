@@ -420,3 +420,22 @@ export async function resetUserPassword(formData) {
     return null;
   }
 }
+
+// UserData
+export async function getUserData(userId, token) {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/api/users/${userId}?populate=role`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    const userData = await response.json();
+    return userData;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
