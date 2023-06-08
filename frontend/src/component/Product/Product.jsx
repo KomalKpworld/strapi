@@ -236,15 +236,18 @@ const Product = () => {
 
           if (success) {
             console.log("Creating Successfull");
+            message.success("Creating Successfull");
             setIsCreateModalOpen(false);
             form.resetFields();
             setFileNames([]);
             handleCategoryApi(searchQuery);
           } else {
             console.log("Failed to create entry");
+            message.error("Failed to create entry");
           }
         } else {
           console.log("Invalid currentUser object. Unable to create data.");
+          message.error("Invalid currentUser object. Unable to create data.");
         }
       }
     } catch (err) {
@@ -271,8 +274,8 @@ const Product = () => {
         if (isEditModalOpen) {
           const formData = new FormData();
 
-          formData.append("category_id", values.category_id);
-          formData.append("sub_category_id", values.sub_category_id);
+          formData.append("category_id", values.category_id.id);
+          formData.append("sub_category_id", values.sub_category_id.id);
           formData.append("frame_type", values.frame_type);
           for (let i = 0; i < files.length; i++) {
             formData.append("file", files[i]);
@@ -282,6 +285,7 @@ const Product = () => {
 
           if (success) {
             console.log("Updating Successfull");
+            message.success("Updating Successfull");
             setIsEditModalOpen(false);
             setData((prevData) =>
               prevData.map((row) =>
@@ -293,10 +297,12 @@ const Product = () => {
             handleCategoryApi(searchQuery);
           } else {
             console.log("Failed to update entry");
+            message.error("Failed to update entry");
           }
         }
       } else {
         console.log("User is not authorized to update this data.");
+        message.error("User is not authorized to update this data.");
       }
     } catch (err) {
       console.log("Error:", err);
@@ -322,6 +328,7 @@ const Product = () => {
 
           if (success) {
             console.log("Deleting Successfull");
+            message.success("Deleting Successfull");
             setIsDeleteModalOpen(false);
             setData((prevData) =>
               prevData.filter((row) => row.id !== values.id)
@@ -331,12 +338,15 @@ const Product = () => {
             handleCategoryApi(searchQuery);
           } else {
             console.log("Failed to delete entry");
+            message.error("Failed to delete entry");
           }
         } else {
           console.log("User is not authorized to delete this data.");
+          message.error("User is not authorized to delete this data.");
         }
       } else {
         console.log("Invalid currentUser object. Unable to delete data.");
+        message.error("Invalid currentUser object. Unable to delete data.");
       }
     } catch (err) {
       console.log("Error:", err);
@@ -358,6 +368,7 @@ const Product = () => {
         handleCategoryApi(searchQuery);
         if (!success) {
           console.log(`Failed to delete category with ID ${id}.`);
+          message.error(`Failed to delete category with ID ${id}.`);
           return;
         }
       }
@@ -637,8 +648,8 @@ const Product = () => {
 
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item label="Category Id" name="category_id">
-                <Select onChange={handleSelectChange} value={selectedValue}>
+              <Form.Item label="Category Id" name={["category_id", "id"]}>
+                <Select onChange={handleSelectChange}>
                   {categoriesName.map((category) => (
                     <Select.Option key={category.id} value={category.id}>
                       {category.category_name || (
@@ -653,8 +664,11 @@ const Product = () => {
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item label="Sub Category Id" name="sub_category_id">
-                <Select onChange={handleSelectChange} value={selectedValue}>
+              <Form.Item
+                label="Sub Category Id"
+                name={["sub_category_id", "id"]}
+              >
+                <Select onChange={handleSelectChange}>
                   {subCategoriesName.map((category) => (
                     <Select.Option key={category.id} value={category.id}>
                       {category.sub_category_name || (

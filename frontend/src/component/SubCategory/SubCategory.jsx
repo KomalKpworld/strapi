@@ -288,15 +288,18 @@ const SubCategory = () => {
 
           if (success) {
             console.log("Creating Successfull");
+            message.success("Creating Successfull");
             setIsCreateModalOpen(false);
             form.resetFields();
             setFileNames([]);
             handleCategoryApi(searchQuery);
           } else {
             console.log("Failed to create entry");
+            message.error("Failed to create entry");
           }
         } else {
           console.log("Invalid currentUser object. Unable to create data.");
+          message.error("Invalid currentUser object. Unable to create data.");
         }
       }
     } catch (err) {
@@ -323,7 +326,7 @@ const SubCategory = () => {
         if (isEditModalOpen) {
           const formData = new FormData();
 
-          formData.append("category_id", values.category_id);
+          formData.append("category_id", values.category_id.id);
           formData.append("sub_category_name", values.sub_category_name);
           formData.append("display_date", values.display_date);
           formData.append("status", values.status);
@@ -343,6 +346,7 @@ const SubCategory = () => {
 
           if (success) {
             console.log("Updating Successfull");
+            message.success("Updating Successfull");
             setIsEditModalOpen(false);
             setData((prevData) =>
               prevData.map((row) =>
@@ -354,10 +358,12 @@ const SubCategory = () => {
             handleCategoryApi(searchQuery);
           } else {
             console.log("Failed to update entry");
+            message.error("Failed to update entry");
           }
         }
       } else {
         console.log("User is not authorized to update this data.");
+        message.error("User is not authorized to update this data.");
       }
     } catch (err) {
       console.log("Error:", err);
@@ -383,6 +389,7 @@ const SubCategory = () => {
 
           if (success) {
             console.log("Deleting Successfull");
+            message.success("Deleting Successfull");
             setIsDeleteModalOpen(false);
             setData((prevData) =>
               prevData.filter((row) => row.id !== values.id)
@@ -392,12 +399,15 @@ const SubCategory = () => {
             handleCategoryApi(searchQuery);
           } else {
             console.log("Failed to delete entry");
+            message.error("Failed to delete entry");
           }
         } else {
           console.log("User is not authorized to delete this data.");
+          message.error("User is not authorized to delete this data.");
         }
       } else {
         console.log("Invalid currentUser object. Unable to delete data.");
+        message.error("Invalid currentUser object. Unable to delete data.");
       }
     } catch (err) {
       console.log("Error:", err);
@@ -419,6 +429,7 @@ const SubCategory = () => {
         handleCategoryApi(searchQuery);
         if (!success) {
           console.log(`Failed to delete category with ID ${id}.`);
+          message.error(`Failed to delete category with ID ${id}.`);
           return;
         }
       }
@@ -782,7 +793,7 @@ const SubCategory = () => {
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item label="Category Id" name="category_id">
+              <Form.Item label="Category Id" name={["category_id", "id"]}>
                 <Select onChange={handleSelectChange} value={selectedValue}>
                   {categoriesName.length === 0 ? (
                     <Select.Option value={null}>

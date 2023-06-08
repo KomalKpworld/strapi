@@ -229,6 +229,7 @@ const Category = () => {
 
           if (success) {
             console.log("Updating an entry");
+            message.success("Updating an entry");
             setIsEditModalOpen(false);
             setData((prevData) =>
               prevData.map((row) =>
@@ -240,10 +241,12 @@ const Category = () => {
             handleCategoryApi(searchQuery);
           } else {
             console.log("Failed to update entry");
+            message.error("Failed to update entry");
           }
         }
       } else {
         console.log("User is not authorized to update this data.");
+        message.error("User is not authorized to update this data.");
       }
     } catch (err) {
       console.log("Error:", err);
@@ -270,6 +273,7 @@ const Category = () => {
 
           if (success) {
             console.log("Deleting an entry");
+            message.success("Deleting an entry");
             setIsDeleteModalOpen(false);
             setData((prevData) =>
               prevData.filter((row) => row.id !== values.id)
@@ -279,12 +283,15 @@ const Category = () => {
             handleCategoryApi(searchQuery);
           } else {
             console.log("Failed to delete entry.");
+            message.error("Failed to delete entry.");
           }
         } else {
           console.log("User is not authorized to delete this data.");
+          message.error("User is not authorized to delete this data.");
         }
       } else {
         console.log("Invalid currentUser object. Unable to delete data.");
+        message.error("Invalid currentUser object. Unable to delete data.");
       }
     } catch (err) {
       console.log("Error:", err);
@@ -306,6 +313,7 @@ const Category = () => {
         handleCategoryApi(searchQuery);
         if (!success) {
           console.log(`Failed to delete category with ID ${id}.`);
+          message.error(`Failed to delete category with ID ${id}.`);
           return;
         }
       }

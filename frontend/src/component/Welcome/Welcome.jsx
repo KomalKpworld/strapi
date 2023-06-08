@@ -5,8 +5,9 @@ const Welcome = () => {
   return (
     <>
       <div>
-        <h5>Welcome</h5>
-        <h5>UserName : {currentUser.username}</h5>
+        <h5>
+          Welcome <b>{currentUser.username}</b>{" "}
+        </h5>
       </div>
     </>
   );

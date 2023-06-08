@@ -62,28 +62,21 @@ const Profile = () => {
             if (success) {
               localStorage.setItem("currentPassword", values.password);
               console.log("Password Change Successful");
-              message.success("Password Change Successful", {
-                duration: 5,
-              });
+              message.success("Password Change Successful");
               setIsModalOpen(false);
               form.resetFields();
             } else {
               console.log("Failed to Change Password");
-              message.error("Failed to Change Password", {
-                duration: 5,
-              });
+              message.error("Failed to Change Password");
             }
           } else {
             console.log("New Password is Not matched with Confirm Password");
-            message.error("New Password is Not matched with Confirm Password", {
-              duration: 5,
-            });
+            message.error("New Password is Not matched with Confirm Password");
           }
         } else {
           console.log("currentPassword is Not matched with Your old Password");
           message.error(
-            "currentPassword is Not matched with Your old Password",
-            { duration: 5 }
+            "currentPassword is Not matched with Your old Password"
           );
         }
       }
@@ -132,11 +125,7 @@ const Profile = () => {
                 <Input disabled />
               </Form.Item>
             </Col>
-            <Col span={24}>
-              <Form.Item label="Provider" name={["currentUser", "provider"]}>
-                <Input disabled />
-              </Form.Item>
-            </Col>
+            <Col span={24}></Col>
           </Row>
         </Form>
       </div>

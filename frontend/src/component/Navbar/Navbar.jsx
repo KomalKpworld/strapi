@@ -23,7 +23,7 @@ const Navbar = ({ onLogout }) => {
         <Toolbar className={classes.toolbar}>
           <div>
             <Typography variant="h6" className={classes.title}>
-              Admin Panel Project
+              <b>Admin Panel</b>
             </Typography>
           </div>
           <div className={classes.profile}>

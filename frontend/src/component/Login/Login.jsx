@@ -21,6 +21,7 @@ import {
   forgotUserPassword,
   resetUserPassword,
 } from "../../api";
+import { message } from "antd";
 
 const Login = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -145,6 +146,7 @@ const Login = () => {
   const handleModalClose = () => {
     setIsModalOpen(false);
     setShowModal(false);
+    setResetPasswordModalOpen(false);
   };
 
   const handleForgotPasswordClick = () => {
@@ -166,13 +168,15 @@ const Login = () => {
 
       const responseData = await forgotUserPassword(formData);
 
-      console.log(responseData, "..responseData");
       if (responseData && responseData.ok) {
-        // If the response is successful, show the reset password modal
+        message.success("Forgot Email sent successful");
         setResetPasswordModalOpen(true);
         setShowModal(false);
       } else {
         console.log("Failed to send reset password email");
+        message.error(
+          "Failed to Send Reset Password Email Please Enter Valid Email Address"
+        );
       }
     } catch (error) {
       console.log(JSON.stringify(error));
@@ -198,12 +202,14 @@ const Login = () => {
 
       const response = await resetUserPassword(formData);
 
-      if (response && response.ok) {
+      if (response) {
         console.log("Password reset successful");
-        setResetPasswordModalOpen(false);
+        message.success("Password reset successful");
       } else {
         console.log("Failed to reset password");
+        message.error("Failed to reset password");
       }
+      setResetPasswordModalOpen(false);
     } catch (error) {
       console.log("Error:", error);
     } finally {
