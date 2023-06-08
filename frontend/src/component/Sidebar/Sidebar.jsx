@@ -57,7 +57,7 @@ const Sidebar = ({ onLogout }) => {
         </ListItem>
         {currentUserInformation &&
           currentUserInformation.role &&
-          currentUserInformation.role.id === 1 && (
+          currentUserInformation.role.id === 3 && (
             <ListItem
               onClick={() => navigate("/users")}
               button

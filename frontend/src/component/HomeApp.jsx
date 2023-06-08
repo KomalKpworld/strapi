@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 
 import {
@@ -17,6 +17,14 @@ import { CssBaseline } from "@mui/material";
 
 const HomeApp = ({ onLogout }) => {
   const classes = useStyles();
+  const [currentUserInformation, setCurrentUserInformation] = useState(null);
+
+  useEffect(() => {
+    const storedCurrentUserInformation = JSON.parse(
+      localStorage.getItem("currentUserInformation")
+    );
+    setCurrentUserInformation(storedCurrentUserInformation);
+  }, []);
   return (
     <>
       <div className={classes.root}>
@@ -36,7 +44,11 @@ const HomeApp = ({ onLogout }) => {
               element={<Sidebar onLogout={onLogout} />}
             ></Route>
             <Route exact path="/product" element={<Product />}></Route>
-            <Route exact path="/users" element={<Users />}></Route>
+            {currentUserInformation &&
+              currentUserInformation.role &&
+              currentUserInformation.role.id === 3 && (
+                <Route exact path="/users" element={<Users />} />
+              )}
             <Route exact path="/Profile" element={<Profile />}></Route>
           </Routes>
         </main>
