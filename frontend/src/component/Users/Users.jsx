@@ -285,6 +285,19 @@ const Users = () => {
       setIsLoading(true);
 
       for (const id of selectedRecords) {
+        const record = data.find((row) => row.id === id);
+        console.log(record);
+
+        if (record.role.id === 3) {
+          console.log(
+            `Skipping deletion for category with ID ${id}. User is ${record.role.name}.`
+          );
+          message.error(
+            `Skipping deletion for category with ID ${id}. User is ${record.role.name}.`
+          );
+          continue;
+        }
+
         const success = await deleteUserData(id, token);
         handleUsersApi(searchQuery);
 
