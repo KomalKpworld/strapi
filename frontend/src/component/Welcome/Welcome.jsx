@@ -6,7 +6,7 @@ const Welcome = () => {
     <>
       <div>
         <h5>
-          Welcome <b>{currentUser.username}</b>{" "}
+          Welcome <b>{currentUser.username}</b> <u>{currentUser.role.name}</u>
         </h5>
       </div>
     </>

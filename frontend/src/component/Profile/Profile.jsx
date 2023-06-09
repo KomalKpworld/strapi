@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@themesberg/react-bootstrap";
 import {
   Button as AntButton,
@@ -11,14 +12,13 @@ import {
   Card,
   Space,
 } from "antd";
-import BootstrapLoader from "../BootstrapLoader";
-import { changeUserPassword, deleteUserData } from "../../api";
-import { useNavigate } from "react-router-dom";
 import {
   DeleteOutlined,
   KeyOutlined,
   LeftCircleOutlined,
 } from "@ant-design/icons";
+import BootstrapLoader from "../BootstrapLoader";
+import { changeUserPassword, deleteUserData } from "../../api";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -34,12 +34,10 @@ const Profile = () => {
 
   useEffect(() => {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-    const currentIdentifier = localStorage.getItem("currentIdentifier");
     const currentPassword = localStorage.getItem("currentPassword");
 
     setUserData({
       currentUser,
-      currentIdentifier,
       currentPassword,
     });
   }, []);
@@ -156,14 +154,14 @@ const Profile = () => {
             </Col>
             <Col span={24}>
               <Form.Item label="Username" name={["currentUser", "username"]}>
-                <Input disabled />
+                <Input readOnly />
               </Form.Item>
             </Col>
           </Row>
           <Row gutter={32}>
             <Col span={24}>
               <Form.Item label="Email" name={["currentUser", "email"]}>
-                <Input disabled />
+                <Input readOnly />
               </Form.Item>
             </Col>
             <Col span={24}></Col>

@@ -1,21 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { List, ListItem, ListItemText, ListSubheader } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import "./Sidebar.css";
 
 const Sidebar = ({ onLogout }) => {
   const navigate = useNavigate();
-  const [currentUserInformation, setCurrentUserInformation] = useState(null);
-
-  useEffect(() => {
-    const storedCurrentUserInformation = JSON.parse(
-      localStorage.getItem("currentUserInformation")
-    );
-    setCurrentUserInformation(storedCurrentUserInformation);
-  }, []);
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
   const handleLogout = () => {
-    // Call the onLogout function passed from the parent component
     if (typeof onLogout === "function") {
       onLogout();
     }
@@ -55,17 +47,15 @@ const Sidebar = ({ onLogout }) => {
         >
           <ListItemText>Product</ListItemText>
         </ListItem>
-        {currentUserInformation &&
-          currentUserInformation.role &&
-          currentUserInformation.role.id === 3 && (
-            <ListItem
-              onClick={() => navigate("/users")}
-              button
-              className="listItem"
-            >
-              <ListItemText>Users</ListItemText>
-            </ListItem>
-          )}
+        {currentUser && currentUser.role && currentUser.role.id === 3 && (
+          <ListItem
+            onClick={() => navigate("/users")}
+            button
+            className="listItem"
+          >
+            <ListItemText>Users</ListItemText>
+          </ListItem>
+        )}
         <ListItem
           onClick={() => navigate("/profile")}
           button

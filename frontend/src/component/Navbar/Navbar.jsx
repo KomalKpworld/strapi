@@ -15,7 +15,7 @@ import Sidebar from "../Sidebar/Sidebar";
 const Navbar = ({ onLogout }) => {
   const navigate = useNavigate();
   const classes = useStyles();
-  const currentIdentifier = localStorage.getItem("currentIdentifier");
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
   return (
     <main>
@@ -34,7 +34,7 @@ const Navbar = ({ onLogout }) => {
                   backgroundColor: "rgb(3 17 48)",
                 }}
               >
-                {currentIdentifier ? currentIdentifier.charAt(0) : ""}
+                {currentUser ? currentUser.username.charAt(0) : ""}
               </Avatar>
             </Button>
           </div>

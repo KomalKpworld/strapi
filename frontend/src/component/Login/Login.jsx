@@ -83,19 +83,17 @@ const Login = () => {
 
       localStorage.setItem("isLoggedIn", "true");
       localStorage.setItem("token", responseData.jwt);
-      localStorage.setItem("currentUser", JSON.stringify(responseData.user));
       localStorage.setItem("currentPassword", data.password);
-      localStorage.setItem("currentIdentifier", data.identifier);
 
       setIsLoggedIn(true);
 
-      const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-      const userId = currentUser.id;
+      const userId = responseData.user.id;
       const token = localStorage.getItem("token");
 
       const userData = await getUserData(userId, token);
 
-      localStorage.setItem("currentUserInformation", JSON.stringify(userData));
+      localStorage.setItem("currentUser", JSON.stringify(userData));
+      window.location.reload();
     } catch (error) {
       console.log("Login failed");
       message.error("Login failed");
@@ -111,8 +109,7 @@ const Login = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("currentUser");
     localStorage.removeItem("currentPassword");
-    localStorage.removeItem("currentIdentifier");
-    localStorage.removeItem("currentUserInformation");
+    window.location.reload();
   };
 
   if (isLoggedIn) {
@@ -314,11 +311,11 @@ const Login = () => {
           />
           <PasswordInput
             name="password"
-            type="password"
             label="Password"
             placeholder="Enter Your Password Use Special Character"
             required
           />
+
           <Select
             label="Role"
             name="role"
