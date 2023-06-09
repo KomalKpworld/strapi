@@ -288,9 +288,9 @@ export async function deleteCategoryData(id, token) {
 }
 
 // UsersData API
-export async function fetchUsersData(token) {
+export async function fetchUsersData(searchQuery = "",token) {
   try {
-    const res = await fetch(`${BASE_URL}/api/users`, {
+    const res = await fetch(`${BASE_URL}/api/users?populate=role&search=${searchQuery}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -437,5 +437,56 @@ export async function getUserData(userId, token) {
   } catch (error) {
     console.log(error);
     return null;
+  }
+}
+
+//UpdateUser
+export async function updateUserData(id, formData, token) {
+  try {
+    const response = await fetch(`${BASE_URL}/api/users/${id}`, {
+      method: "PUT",
+      body: formData,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (response.ok) {
+      return true;
+    } else {
+      console.log("Failed to update entry");
+      return false;
+    }
+  } catch (err) {
+    console.log("Error:", err);
+    if (err.response) {
+      console.log("Error response:", err.response);
+    }
+    return false;
+  }
+}
+
+//DeleteUserData
+export async function deleteUserData(id, token) {
+  try {
+    const response = await fetch(`${BASE_URL}/api/users/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (response.ok) {
+      return true;
+    } else {
+      console.log("Failed to delete entry");
+      return false;
+    }
+  } catch (err) {
+    console.log("Error:", err);
+    if (err.response) {
+      console.log("Error response:", err.response);
+    }
+    return false;
   }
 }
