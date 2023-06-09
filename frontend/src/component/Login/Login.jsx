@@ -11,6 +11,7 @@ import {
   Group,
   Button,
   Modal,
+  Select,
 } from "@mantine/core";
 import { BrowserRouter } from "react-router-dom";
 import BootstrapLoader from "../BootstrapLoader";
@@ -318,12 +319,14 @@ const Login = () => {
             placeholder="Enter Your Password Use Special Character"
             required
           />
-          <TextInput
+          <Select
+            label="Role"
             name="role"
-            type="role"
-            label="role"
-            placeholder="Enter 1"
-            required
+            placeholder="Select Role"
+            data={[
+              { value: "1", label: "(1)-Authenticate" },
+              { value: "2", label: "(2)-Public" },
+            ]}
           />
           <TextInput
             name="confirmed"
