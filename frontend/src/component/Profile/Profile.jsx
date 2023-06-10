@@ -133,6 +133,7 @@ const Profile = () => {
     form.resetFields();
     setIsModalOpen(false);
     setIsDeleteModalOpen(false);
+    window.location.reload();
   };
 
   const handleDelete = (record) => {

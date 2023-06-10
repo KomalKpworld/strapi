@@ -356,6 +356,7 @@ const Category = () => {
     setIsEditModalOpen(false);
     setIsCreateModalOpen(false);
     setIsDeleteModalOpen(false);
+    window.location.reload();
   };
 
   const handleFileChange = (e) => {

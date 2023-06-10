@@ -390,9 +390,10 @@ const Product = () => {
     setIsCreateModalOpen(true);
   };
 
-  const handleEdit = (record) => {
+  const handleEdit = async (record) => {
     console.log("Select for Edit", record);
     setEditFormData(record);
+    await fetchDataSubCategoryName(record.category_id.id);
     setIsEditModalOpen(true);
   };
 
@@ -411,6 +412,7 @@ const Product = () => {
     setIsEditModalOpen(false);
     setIsCreateModalOpen(false);
     setIsDeleteModalOpen(false);
+    window.location.reload();
   };
 
   const handleFileChange = (e) => {
@@ -740,15 +742,14 @@ const Product = () => {
               Cancel
             </Button>{" "}
             <Button
+              className="btn btn-danger"
               key="submit"
               type="primary"
               disabled={isLoading}
               onClick={(event) =>
                 handleDeleteForm(form.getFieldsValue(), event)
               }
-              style={{
-                borderRadius: "10px",
-              }}
+              style={{ borderRadius: "10px" }}
             >
               Delete
               {isLoading && <BootstrapLoader />}

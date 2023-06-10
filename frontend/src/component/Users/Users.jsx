@@ -346,6 +346,7 @@ const Users = () => {
     setIsEditModalOpen(false);
     setIsCreateModalOpen(false);
     setIsDeleteModalOpen(false);
+    window.location.reload();
   };
 
   const filterData = (data, searchQuery) => {
@@ -411,6 +412,7 @@ const Users = () => {
               Cancel
             </Button>{" "}
             <Button
+              className="btn btn-danger"
               key="submit"
               type="primary"
               disabled={isLoading}
@@ -466,6 +468,7 @@ const Users = () => {
               Cancel
             </Button>{" "}
             <Button
+              className="btn btn-success"
               key="submit"
               type="primary"
               disabled={isLoading}
@@ -519,8 +522,9 @@ const Users = () => {
                 rules={[{ required: true, message: "Please enter a role" }]}
               >
                 <Select>
-                  <Select.Option value="1">(1)-Authenticate</Select.Option>
-                  <Select.Option value="2">(2)-Public</Select.Option>
+                  <Select.Option value={1}>Authenticate</Select.Option>
+                  <Select.Option value={2}>Public</Select.Option>
+                  <Select.Option value={3}>Admin</Select.Option>
                 </Select>
               </Form.Item>
             </Col>
@@ -616,8 +620,9 @@ const Users = () => {
                 rules={[{ required: true, message: "Please enter a role" }]}
               >
                 <Select>
-                  <Select.Option value="1">(1)-Authenticate</Select.Option>
-                  <Select.Option value="2">(2)-Public</Select.Option>
+                  <Select.Option value={1}>Authenticate</Select.Option>
+                  <Select.Option value={2}>Public</Select.Option>
+                  <Select.Option value={3}>Admin</Select.Option>
                 </Select>
               </Form.Item>
             </Col>
@@ -659,7 +664,6 @@ const Users = () => {
           <>
             <Button
               type="text"
-              danger
               disabled={isLoading}
               onClick={() => deleteMultipleCategoryData(selectedRecords)}
               style={{

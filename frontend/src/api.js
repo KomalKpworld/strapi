@@ -28,9 +28,9 @@ export async function fetchSubCategoriesName(selectedValue) {
 }
 
 //ProductData API
-export async function fetchProductData() {
+export async function fetchProductData(query) {
   try {
-    const res = await fetch(`${BASE_URL}/api/product`);
+    const res = await fetch(`${BASE_URL}/api/product?keyword=${query}`);
     const data = await res.json();
     return data;
   } catch (err) {

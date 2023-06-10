@@ -321,8 +321,8 @@ const Login = () => {
             name="role"
             placeholder="Select Role"
             data={[
-              { value: "1", label: "(1)-Authenticate" },
-              { value: "2", label: "(2)-Public" },
+              { value: 1, label: "Authenticate" },
+              { value: 2, label: "Public" },
             ]}
           />
           <TextInput

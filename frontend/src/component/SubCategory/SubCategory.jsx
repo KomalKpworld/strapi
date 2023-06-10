@@ -472,6 +472,7 @@ const SubCategory = () => {
     setIsCreateModalOpen(false);
     setIsEditModalOpen(false);
     setIsDeleteModalOpen(false);
+    window.location.reload();
   };
 
   const handleFileChange = (e) => {
